@@ -13,12 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('m_suppliers', function (Blueprint $table) {
-            $table->id(); // Primary key
-            $table->string('name'); // Nama supplier
-            $table->string('email')->unique(); // Email supplier
-            $table->string('phone'); // Nomor telepon supplier
-            $table->text('address')->nullable(); // Alamat supplier
+        Schema::create('m_categories', function (Blueprint $table) {
+            $table->id();
+            $table->string('name'); // Nama kategori
+            $table->text('description')->nullable(); // Deskripsi kategori (opsional)
             $table->timestamps(); // Kolom created_at dan updated_at
             $table->softDeletes(); // Kolom deleted_at untuk soft delete
         });
@@ -31,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('m_suppliers');
+        Schema::dropIfExists('m_categories');
     }
 };
