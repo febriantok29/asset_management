@@ -14,5 +14,5 @@ class Supplier extends Model
     protected $table = 'm_suppliers'; // Nama tabel adalah m_suppliers
 
     // Kolom-kolom yang bisa diisi secara massal
-    protected $fillable = ['name', 'email', 'phone', 'address'];
+    protected $fillable = ['code', 'name', 'email', 'contact_number', 'address'];
 }

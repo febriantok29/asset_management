@@ -48,6 +48,8 @@
                                 <p>Home</p>
                             </a>
                         </li>
+                        <!-- Master Section -->
+                        <li class="nav-header">MASTER</li>
                         <li class="nav-item">
                             <a href="{{ route('categories.index') }}" class="nav-link">
                                 <i class="nav-icon fas fa-list-alt"></i>
@@ -55,11 +57,25 @@
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a href="{{ route('suppliers.index') }}" class="nav-link">
+                                <i class="nav-icon fas fa-truck"></i>
+                                <p>Suppliers</p>
+                            </a>
+                        </li>
+                        <!-- Transaksi Section -->
+                        <li class="nav-header">TRANSAKSI</li>
+                        <li class="nav-item">
                             <a href="{{ route('assets.index') }}" class="nav-link">
                                 <i class="nav-icon fas fa-box"></i>
                                 <p>Assets</p>
                             </a>
                         </li>
+                        {{-- <li class="nav-item">
+                            <a href="{{ route('transactions.index') }}" class="nav-link">
+                                <i class="nav-icon fas fa-exchange-alt"></i>
+                                <p>Transactions</p>
+                            </a>
+                        </li> --}}
                     </ul>
                 </nav>
             </div>
