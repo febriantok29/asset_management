@@ -11,6 +11,17 @@ class Category extends Model
 
     protected $table = 'm_categories';
 
-    protected $fillable = ['name', 'description'];
+    protected $fillable = ['code', 'name', 'description'];
     protected $dates = ['deleted_at'];
+
+    // Pastikan code adalah unik
+    public static function boot()
+    {
+        parent::boot();
+        static::creating(function ($category) {
+            if (Category::where('code', $category->code)->exists()) {
+                throw new \Exception('Kode katagori sudah digunakan.');
+            }
+        });
+    }
 }

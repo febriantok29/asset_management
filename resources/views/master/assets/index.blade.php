@@ -33,7 +33,7 @@
                         <td>
                             <a href="{{ route('assets.edit', $asset->id) }}" class="btn btn-warning btn-sm">Edit</a>
                             <form action="{{ route('assets.destroy', $asset->id) }}" method="POST" style="display:inline;">
-                                @csrf
+                                @c  srf
                                 @method('DELETE')
                                 <button class="btn btn-danger btn-sm" type="submit">Delete</button>
                             </form>

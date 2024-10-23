@@ -24,14 +24,45 @@ class CategoryController extends Controller
     // Menyimpan data kategori baru
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
+        $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
         ]);
 
-        Category::create($validatedData);
-        return redirect()->route('categories.index')->with('success', 'Category created successfully.');
+        // Cari kode terbesar saat ini dari kategori yang ada, tanpa bergantung pada ID
+        $lastCode = Category::withTrashed()
+            ->where('code', 'LIKE', 'C%')
+            ->orderBy('code', 'desc')
+            ->first();
+
+        // Jika tidak ada kode yang ditemukan, mulai dari 'C001'
+        if ($lastCode) {
+            // Ekstrak angka setelah prefix 'C'
+            $lastNumber = intval(substr($lastCode->code, 1));
+            // Increment nomor
+            $newCodeNumber = $lastNumber + 1;
+        } else {
+            $newCodeNumber = 1;
+        }
+
+        // Pastikan kode tidak melebihi batas 999
+        if ($newCodeNumber > 999) {
+            return redirect()->back()->withErrors(['code' => 'Jumlah kategori telah mencapai batas maksimum']);
+        }
+
+        // Format kode baru dengan zero-padding
+        $newCode = 'C' . str_pad($newCodeNumber, 3, '0', STR_PAD_LEFT);
+
+        // Simpan kategori baru
+        Category::create([
+            'code' => $newCode,
+            'name' => $request->name,
+            'description' => $request->description,
+        ]);
+
+        return redirect()->route('categories.index')->with('success', 'Berhasil menambahkan kategori baru.');
     }
+
 
     // Menampilkan form edit kategori
     public function edit(Category $category)

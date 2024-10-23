@@ -2,20 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Master\Asset;
+use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
     public function index()
     {
-        // Ambil data dari database menggunakan model Asset
-        $totalAssets = Asset::totalAssets();
-        $assetsInMaintenance = Asset::assetsInMaintenance();
-        $assetsUnderRepair = Asset::assetsUnderRepair();
-        $brokenAssets = Asset::brokenAssets();
-        $recentAssets = Asset::orderBy('updated_at', 'desc')->take(5)->get(); // 5 aktivitas terbaru
-
-        // Kirim data ke view
-        return view('home', compact('totalAssets', 'assetsInMaintenance', 'assetsUnderRepair', 'brokenAssets', 'recentAssets'));
+        // Jika ada data atau pengaturan yang perlu dikirim, bisa dilakukan di sini
+        return view('home');
     }
 }
