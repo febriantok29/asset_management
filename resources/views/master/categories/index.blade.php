@@ -2,8 +2,8 @@
 
 @section('content')
     <div class="container">
-        <h1 class="my-4">Categories</h1>
-        <a href="{{ route('categories.create') }}" class="btn btn-primary mb-3">Add New Category</a>
+        <h1 class="my-4">Kategori</h1>
+        <a href="{{ route('categories.create') }}" class="btn btn-primary mb-3">Tambah Kategori Baru</a>
 
         @if (session('success'))
             <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -12,32 +12,36 @@
             </div>
         @endif
 
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>No</th>
-                    <th>Kode</th>
-                    <th>Kategori</th>
-                    <th>Keterangan</th>
-                    <th>Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($categories as $index => $category)
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
                     <tr>
-                        <td>{{ $index + 1 }}</td>
-                        <td>{{ $category->code }}</td>
-                        <td>{{ $category->name }}</td>
-                        <td>{{ $category->description }}</td>
-                        <td>
-                            <a href="{{ route('categories.edit', $category->id) }}" class="btn btn-warning btn-sm">Edit</a>
-                            <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal"
-                                data-category-id="{{ $category->id }}">Delete</button>
-                        </td>
+                        <th>No</th>
+                        <th>Kode</th>
+                        <th>Kategori</th>
+                        <th>Keterangan</th>
+                        <th>Aksi</th>
                     </tr>
-                @endforeach
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @foreach ($categories as $index => $category)
+                        <tr>
+                            <td>{{ $index + 1 }}</td>
+                            <td>{{ $category->code }}</td>
+                            <td>{{ $category->name }}</td>
+                            <td>{{ $category->description }}</td>
+                            <td>
+                                <a href="{{ route('categories.edit', $category->id) }}" class="btn btn-warning btn-sm"><i
+                                        class="fas fa-edit"></i> Perbarui</a>
+                                <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal"
+                                    data-category-id="{{ $category->id }}"> <i class="fas fa-trash"></i> Hapus</button>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+
+        </div>
     </div>
 
     <!-- Modal Konfirmasi Delete -->

@@ -6,12 +6,15 @@
         <a href="{{ route('suppliers.create') }}" class="btn btn-primary mb-3">Tambah Supplier Baru</a>
 
         @if (session('success'))
-            <div class="alert alert-success">{{ session('success') }}</div>
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
         @endif
 
         <div class="table-responsive">
-            <table class="table table-striped table-hover table-bordered">
-                <thead class="thead-dark">
+            <table class="table table-striped table-hover ">
+                <thead>
                     <tr>
                         <th class="text-center">Kode</th>
                         <th class="text-center">Nama</th>
@@ -31,7 +34,7 @@
                             <td>{{ $supplier->address }}</td>
                             <td class="text-center">
                                 <a href="{{ route('suppliers.edit', $supplier->id) }}" class="btn btn-warning btn-sm">
-                                    <i class="fas fa-edit"></i> Edit
+                                    <i class="fas fa-edit"></i> Perbarui
                                 </a>
                                 <form action="{{ route('suppliers.destroy', $supplier->id) }}" method="POST"
                                     class="d-inline" onsubmit="return confirm('Yakin ingin menghapus supplier ini?')">
