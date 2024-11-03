@@ -11,38 +11,19 @@ class Asset extends Model
 
     protected $table = 'm_assets';
 
-    protected $fillable = ['name', 'status', 'description', 'last_maintenance_at', 'category_id', 'supplier_id', 'purchase_price', 'purchase_date'];
+    protected $fillable = [
+        'name', 'code', 'category_id', 'supplier_id', 'purchase_price', 'purchase_date', 'description'
+    ];
 
-    // Relasi dengan Kategori
+    // Relasi ke kategori
     public function category()
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(Category::class, 'category_id');
     }
 
-    // Relasi dengan Supplier
+    // Relasi ke pemasok
     public function supplier()
     {
-        return $this->belongsTo(Supplier::class);
-    }
-
-    // Method untuk menghitung total assets, assets in maintenance, dll.
-    public static function totalAssets()
-    {
-        return self::count();
-    }
-
-    public static function assetsInMaintenance()
-    {
-        return self::where('status', 'maintenance')->count();
-    }
-
-    public static function assetsUnderRepair()
-    {
-        return self::where('status', 'repair')->count();
-    }
-
-    public static function brokenAssets()
-    {
-        return self::where('status', 'broken')->count();
+        return $this->belongsTo(Supplier::class, 'supplier_id');
     }
 }

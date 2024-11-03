@@ -62,12 +62,24 @@
                                 <p>Supplier</p>
                             </a>
                         </li>
-                        <!-- Transaksi Section -->
-                        <li class="nav-header">TRANSAKSI</li>
                         <li class="nav-item">
                             <a href="{{ route('assets.index') }}" class="nav-link">
                                 <i class="nav-icon fas fa-box"></i>
                                 <p>Aset</p>
+                            </a>
+                        <li class="nav-item">
+                            <a href="{{ route('asset_locations.index') }}" class="nav-link">
+                                <i class="nav-icon fas fa-map-marker-alt"></i>
+                                <p>Lokasi</p>
+                            </a>
+                        </li>
+
+                        <!-- Transaksi Section -->
+                        <li class="nav-header">TRANSAKSI</li>
+                        <li class="nav-item">
+                            <a href="{{ route('asset_transactions.index') }}" class="nav-link">
+                                <i class="nav-icon fas fa-exchange-alt"></i>
+                                <p>Transaksi Aset</p>
                             </a>
                         </li>
                         {{-- <li class="nav-item">

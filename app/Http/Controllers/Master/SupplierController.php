@@ -66,8 +66,13 @@ class SupplierController extends Controller
 
     private function generateUniqueCode()
     {
-        $lastSupplier = Supplier::orderBy('id', 'desc')->first();
-        $nextNumber = $lastSupplier ? ((int) substr($lastSupplier->code, 1)) + 1 : 1;
-        return 'S' . str_pad($nextNumber, 3, '0', STR_PAD_LEFT);
+        $lastCode = Supplier::withTrashed()->orderBy('id', 'desc')->value('code');
+        $newCode = 'S' . str_pad((int) substr($lastCode, 1) + 1, 3, '0', STR_PAD_LEFT);
+
+        while (Supplier::withTrashed()->where('code', $newCode)->exists()) {
+            $newCode = 'S' . str_pad((int) substr($newCode, 1) + 1, 3, '0', STR_PAD_LEFT);
+        }
+
+        return $newCode;
     }
 }
