@@ -24,43 +24,29 @@ class CategoryController extends Controller
     // Menyimpan data kategori baru
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
+        $validator = [
+            'code' => 'required|string|max:16|unique:m_categories|alpha_num|min:2',
+            'name' => 'required|string|max:255|min:2',
             'description' => 'nullable|string',
-        ]);
+        ];
 
-        // Cari kode terbesar saat ini dari kategori yang ada, tanpa bergantung pada ID
-        $lastCode = Category::withTrashed()
-            ->where('code', 'LIKE', 'C%')
-            ->orderBy('code', 'desc')
-            ->first();
+        $validatorMessages = [
+            'code.required' => 'Kode kategori wajib diisi!',
+            'code.unique' => 'Kode kategori sudah digunakan, silakan gunakan kode lain.',
+            'code.min' => 'Sila masukkan minimal 2 karakter untuk kode kategori.',
+            'code.max' => 'Sila masukkan maksimal 16 karakter untuk kode kategori.',
+            'code.alpha_num' => 'Kode kategori hanya boleh berisi huruf dan angka.',
+            'name.required' => 'Nama kategori wajib diisi!',
+            'name.min' => 'Sila masukkan minimal 2 karakter untuk nama kategori.',
+            'name.max' => 'Sila masukkan maksimal 255 karakter untuk nama kategori.',
+            'description.string' => 'Deskripsi kategori harus berupa teks.',
+        ];
 
-        // Jika tidak ada kode yang ditemukan, mulai dari 'C001'
-        if ($lastCode) {
-            // Ekstrak angka setelah prefix 'C'
-            $lastNumber = intval(substr($lastCode->code, 1));
-            // Increment nomor
-            $newCodeNumber = $lastNumber + 1;
-        } else {
-            $newCodeNumber = 1;
-        }
+        $validatedData = $request->validate($validator, $validatorMessages);
 
-        // Pastikan kode tidak melebihi batas 999
-        if ($newCodeNumber > 999) {
-            return redirect()->back()->withErrors(['code' => 'Jumlah kategori telah mencapai batas maksimum']);
-        }
+        Category::create($validatedData);
 
-        // Format kode baru dengan zero-padding
-        $newCode = 'C' . str_pad($newCodeNumber, 3, '0', STR_PAD_LEFT);
-
-        // Simpan kategori baru
-        Category::create([
-            'code' => $newCode,
-            'name' => $request->name,
-            'description' => $request->description,
-        ]);
-
-        return redirect()->route('categories.index')->with('success', 'Berhasil menambahkan kategori baru.');
+        return redirect()->route('categories.index')->with('success', 'Kategori ' . $validatedData['name'] . ' berhasil ditambahkan.');
     }
 
 

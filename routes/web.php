@@ -19,7 +19,6 @@ use App\Http\Controllers\Transaction\AssetTransactionController;
 |
 */
 
-
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::prefix('master')->group(function () {
