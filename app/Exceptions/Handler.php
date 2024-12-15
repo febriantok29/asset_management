@@ -49,32 +49,4 @@ class Handler extends ExceptionHandler
             //
         });
     }
-
-    public function render($request, Throwable $exception)
-    {
-        // Tangani khusus untuk QueryException
-        if ($exception instanceof QueryException) {
-            return response()->view('errors.query', [
-                'errorMessage' => $exception->getMessage(),
-                'file' => $exception->getFile(),
-                'line' => $exception->getLine()
-            ], 500);
-        }
-
-        // Tangani khusus untuk HttpException (404, 403, dll.)
-        if ($exception instanceof HttpExceptionInterface) {
-            $statusCode = $exception->getStatusCode();
-            return response()->view("errors.{$statusCode}", [], $statusCode);
-        }
-
-        // Jika dalam mode debug, tampilkan pesan error lengkap
-        if (config('app.debug')) {
-            return response()->view('errors.debug', [
-                'exception' => $exception
-            ], 500);
-        }
-
-        // Default error handling
-        return response()->view('errors.default', [], 500);
-    }
 }

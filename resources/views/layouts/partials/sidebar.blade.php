@@ -5,18 +5,33 @@
     <div class="sidebar">
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                <!-- Dashboard -->
                 <li class="nav-item">
                     <a href="{{ route('home') }}" class="nav-link">
                         <i class="nav-icon fas fa-home"></i>
                         <p>Dashboard</p>
                     </a>
                 </li>
+
+                <!-- Master Section -->
+                <li class="nav-header">MASTER</li>
                 <li class="nav-item">
                     <a href="{{ route('categories.index') }}" class="nav-link">
                         <i class="nav-icon fas fa-list"></i>
                         <p>Categories</p>
                     </a>
                 </li>
+                <!-- Tambahkan menu master lainnya di sini -->
+
+                <!-- Transaksi Section -->
+                <li class="nav-header">TRANSAKSI</li>
+                <li class="nav-item">
+                    <a href="{{ route('asset_transactions.index') }}" class="nav-link">
+                        <i class="nav-icon fas fa-file-alt"></i>
+                        <p>Transactions</p>
+                    </a>
+                </li>
+                <!-- Tambahkan menu transaksi lainnya di sini -->
             </ul>
         </nav>
     </div>

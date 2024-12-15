@@ -9,39 +9,13 @@
 @endsection
 
 @section('content')
-    <div class="container mt-4">
-
-        <div class="card">
-            <div class="card-header">
-                <a href="{{ route('categories.create') }}" class="btn btn-primary"><i class="fas fa-plus"></i> Tambah</a>
-            </div>
-            <div class="card-body">
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Kode</th>
-                            <th>Kategori</th>
-                            <th>Deskripsi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse ($categories as $category)
-                            <tr>
-                                <td>{{ $loop->iteration }}</td>
-                                <td>{{ $category->code }}</td>
-                                <td>{{ $category->name }}</td>
-                                <td>{{ $category->description }}</td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="4" class="text-center">Tidak ada data</td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
-
-        </div>
-    </div>
+    @include('partials.table', [
+        'createRoute' => route('categories.create'),
+        'editRoute' => 'categories.edit',
+        'showRoute' => 'categories.show',
+        'deleteRoute' => 'categories.destroy',
+        'columns' => ['#', 'Kode', 'Nama Kategori', 'Deskripsi'],
+        'fields' => ['code', 'name', 'description'],
+        'items' => $categories,
+    ])
 @endsection
