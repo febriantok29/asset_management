@@ -14,14 +14,9 @@ class Category extends Model
     protected $fillable = ['code', 'name', 'description'];
     protected $dates = ['deleted_at'];
 
-    // Pastikan code adalah unik
-    public static function boot()
+    // `Asset` model has a relationship with `Category` model
+    public function assets()
     {
-        parent::boot();
-        static::creating(function ($category) {
-            if (Category::where('code', $category->code)->exists()) {
-                throw new \Exception('Kode katagori sudah digunakan.');
-            }
-        });
+        return $this->hasMany(Asset::class, 'category_id');
     }
 }

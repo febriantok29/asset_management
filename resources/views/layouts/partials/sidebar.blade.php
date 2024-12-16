@@ -26,9 +26,9 @@
                 <!-- Transaksi Section -->
                 <li class="nav-header">TRANSAKSI</li>
                 <li class="nav-item">
-                    <a href="{{ route('asset_transactions.index') }}" class="nav-link">
+                    <a href="{{ route('asset_purchases.index') }}" class="nav-link">
                         <i class="nav-icon fas fa-file-alt"></i>
-                        <p>Transactions</p>
+                        <p>Asset Purchase</p>
                     </a>
                 </li>
                 <!-- Tambahkan menu transaksi lainnya di sini -->

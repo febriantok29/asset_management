@@ -1,0 +1,1 @@
+<!-- show view for master/asset_locations/show -->

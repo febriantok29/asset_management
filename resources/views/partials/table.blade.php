@@ -24,9 +24,11 @@
                                 <td>{{ $item->$field }}</td>
                             @endforeach
                             <td>
-                                <a href="{{ route($editRoute, $item->id) }}" class="btn btn-warning btn-sm">
-                                    <i class="fas fa-edit"></i> Edit
-                                </a>
+                                @if ($editRoute)
+                                    <a href="{{ route($editRoute, $item->id) }}" class="btn btn-warning btn-sm">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </a>
+                                @endif
                                 <a href="{{ route($showRoute, $item->id) }}" class="btn btn-info btn-sm">
                                     <i class="fas fa-eye"></i> Detail
                                 </a>

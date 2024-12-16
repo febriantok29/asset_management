@@ -91,6 +91,12 @@ class CategoryController extends Controller
     // Soft delete kategori
     public function destroy(Category $category)
     {
+        // Check on `Asset` model if there is any asset that uses this category
+
+        if ($category->assets->count() > 0) {
+            return redirect()->route('categories.index')->with('error', 'Kategori ' . $category->name . ' tidak bisa dihapus karena masih digunakan oleh aset.');
+        }
+
         $category->delete();
         return redirect()->route('categories.index')->with('success', 'Kategori ' . $category->name . ' berhasil dihapus.');
     }

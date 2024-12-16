@@ -10,17 +10,8 @@ class AssetLocation extends Model
 {
     use SoftDeletes;
 
-    protected $table = 'm_asset_locations';
+    protected $table = 'm_locations';
 
-    protected $fillable = [
-        'name',
-        'code',
-        'description'
-    ];
-
-    // Relasi ke model lain jika diperlukan
-    public function assets()
-    {
-        return $this->hasMany(Asset::class, 'location_id');
-    }
+    protected $fillable = ['code', 'name', 'address'];
+    protected $dates = ['created_at', 'updated_at', 'deleted_at'];
 }

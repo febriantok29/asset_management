@@ -21,15 +21,11 @@ class AssetLocationController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255|unique:m_asset_locations,name',
-            'code' => 'required|string|max:50|unique:m_asset_locations,code',
-            'description' => 'nullable|string',
-        ]);
+        $validatedData = $this->validateAssetLocation($request);
 
-        AssetLocation::create($request->only('name', 'code', 'description'));
+        AssetLocation::create($validatedData);
 
-        return redirect()->route('asset_locations.index')->with('success', 'Lokasi aset berhasil ditambahkan.');
+        return redirect()->route('asset_locations.index')->with('success', 'Location aset berhasil ditambahkan.');
     }
 
     public function edit(AssetLocation $assetLocation)
@@ -39,13 +35,9 @@ class AssetLocationController extends Controller
 
     public function update(Request $request, AssetLocation $assetLocation)
     {
-        $request->validate([
-            'name' => "required|string|max:255|unique:m_asset_locations,name,{$assetLocation->id}",
-            'code' => "required|string|max:50|unique:m_asset_locations,code,{$assetLocation->id}",
-            'description' => 'nullable|string',
-        ]);
+        $validatedData = $this->validateAssetLocation($request, $assetLocation->id);
 
-        $assetLocation->update($request->only('name', 'code', 'description'));
+        $assetLocation->update($validatedData);
 
         return redirect()->route('asset_locations.index')->with('success', 'Lokasi aset berhasil diperbarui.');
     }
@@ -54,5 +46,28 @@ class AssetLocationController extends Controller
     {
         $assetLocation->delete();
         return redirect()->route('asset_locations.index')->with('success', 'Lokasi aset berhasil dihapus.');
+    }
+
+    private function validateAssetLocation(Request $request, $id = null)
+    {
+        $rules = [
+            'name' => 'required|string|min:2|max:255|unique:m_asset_locations,name' . ($id ? ",$id" : ''),
+            'code' => 'required|string|min:2|max:50|unique:m_asset_locations,code' . ($id ? ",$id" : ''),
+            'address' => 'nullable|string',
+        ];
+
+        $messages = [
+            'name.required' => 'Nama lokasi aset wajib diisi!',
+            'name.min' => 'Nama lokasi aset minimal terdiri dari 2 karakter.',
+            'name.max' => 'Nama lokasi aset maksimal terdiri dari 255 karakter.',
+            'name.unique' => 'Nama lokasi aset sudah digunakan, silakan gunakan nama lain.',
+            'code.required' => 'Kode lokasi aset wajib diisi!',
+            'code.min' => 'Kode lokasi aset minimal terdiri dari 2 karakter.',
+            'code.max' => 'Kode lokasi aset maksimal terdiri dari 50 karakter.',
+            'code.unique' => 'Kode lokasi aset sudah digunakan, silakan gunakan kode lain.',
+            'address.string' => 'Alamat lokasi aset harus berupa teks.',
+        ];
+
+        return $request->validate($rules, $messages);
     }
 }
