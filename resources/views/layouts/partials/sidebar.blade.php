@@ -21,6 +21,12 @@
                         <p>Categories</p>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a href="{{ route('vendors.index') }}" class="nav-link">
+                        <i class="nav-icon fas fa-user-tie"></i>
+                        <p>Vendors</p>
+                    </a>
+                </li>
                 <!-- Tambahkan menu master lainnya di sini -->
 
                 <!-- Transaksi Section -->

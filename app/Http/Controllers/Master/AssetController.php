@@ -58,7 +58,19 @@ class AssetController extends Controller
     public function destroy(Asset $asset)
     {
         if ($asset->assetPurchases()->exists()) {
-            return redirect()->route('assets.index')->with('error', 'Aset tidak bisa dihapus karena sudah digunakan pada transaksi pembelian aset.');
+            return redirect()->route('assets.index')->with('error', 'Aset tidak bisa dihapus karena sudah diajukan pembelian.');
+        }
+
+        if ($asset->assetTransfers()->exists()) {
+            return redirect()->route('assets.index')->with('error', 'Aset tidak bisa dihapus karena aset sudah dipindahkan.');
+        }
+
+        if ($asset->assetMaintenances()->exists()) {
+            return redirect()->route('assets.index')->with('error', 'Aset tidak bisa dihapus karena pernah dilakukan pemeliharaan.');
+        }
+
+        if ($asset->assetRepairs()->exists()) {
+            return redirect()->route('assets.index')->with('error', 'Aset tidak dapat dihapus karena pernah diperbaiki.');
         }
 
         $asset->delete();

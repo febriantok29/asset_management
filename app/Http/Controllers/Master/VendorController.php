@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Master;
 use App\Http\Controllers\Controller;
 use App\Models\Master\Vendor;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 
 class VendorController extends Controller
 {
@@ -31,6 +32,7 @@ class VendorController extends Controller
     public function store(Request $request)
     {
         $validatedData = $this->validateVendor($request);
+
         Vendor::create($validatedData);
 
         return redirect()->route('vendors.index')->with('success', 'Berhasil menambahkan vendor ' . $validatedData['name'] . '.');
@@ -59,6 +61,20 @@ class VendorController extends Controller
             'phone.string' => 'Nomor telepon vendor harus berupa teks.',
             'email.email' => 'Format email tidak valid.',
         ];
+
+        $email = $request->email;
+        if ($email) {
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                throw ValidationException::withMessages(['email' => 'Silakan isi email dengan format yang benar.']);
+            }
+        }
+
+        $phone = $request->phone;
+        if ($phone) {
+            if (!preg_match('/^[0-9\-\+]{9,15}$/', $phone)) {
+                throw ValidationException::withMessages(['phone' => 'Silakan isi nomor telepon dengan panjang 9-15 karakter, dan hanya boleh berisi angka, tanda +, dan tanda -']);
+            }
+        }
 
         return $request->validate($rules, $messages);
     }

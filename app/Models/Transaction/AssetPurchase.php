@@ -32,7 +32,7 @@ class AssetPurchase extends Model
     ];
 
     protected $casts = [
-        'purchase_date' => 'date',
+        'purchase_date' => 'date:Y-m-d',
         'total_cost' => 'decimal:2',
     ];
 

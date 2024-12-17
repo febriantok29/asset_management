@@ -12,9 +12,14 @@ class Category extends Model
     protected $table = 'm_categories';
 
     protected $fillable = ['code', 'name', 'description'];
-    protected $dates = ['deleted_at'];
+    protected $dates = ['created_at', 'updated_at', 'deleted_at'];
 
-    // `Asset` model has a relationship with `Category` model
+    protected $casts = [
+        'created_at' => 'datetime:Y-m-d H:i:s',
+        'updated_at' => 'datetime:Y-m-d H:i:s',
+        'deleted_at' => 'datetime:Y-m-d H:i:s',
+    ];
+
     public function assets()
     {
         return $this->hasMany(Asset::class, 'category_id');

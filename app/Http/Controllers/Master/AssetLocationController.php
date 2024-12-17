@@ -44,6 +44,10 @@ class AssetLocationController extends Controller
 
     public function destroy(AssetLocation $assetLocation)
     {
+        if ($assetLocation->assetTransfersFrom->count() > 0 || $assetLocation->assetTransfersTo->count() > 0) {
+            return redirect()->route('asset_locations.index')->with('error', 'Lokasi aset tidak bisa dihapus karena terdapat aset yang menggunakan lokasi ini.');
+        }
+
         $assetLocation->delete();
         return redirect()->route('asset_locations.index')->with('success', 'Lokasi aset berhasil dihapus.');
     }
