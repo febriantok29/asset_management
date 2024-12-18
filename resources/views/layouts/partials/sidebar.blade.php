@@ -18,25 +18,25 @@
                 <li class="nav-item">
                     <a href="{{ route('categories.index') }}" class="nav-link">
                         <i class="nav-icon fas fa-list"></i>
-                        <p>Categories</p>
+                        <p>Kategori Asset</p>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a href="{{ route('vendors.index') }}" class="nav-link">
                         <i class="nav-icon fas fa-user-tie"></i>
-                        <p>Vendors</p>
+                        <p>Vendor Penyedia Asset</p>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a href="{{ route('asset_locations.index') }}" class="nav-link">
                         <i class="nav-icon fas fa-map-marker-alt"></i>
-                        <p>Asset Locations</p>
+                        <p>Penempatan Asset</p>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a href="{{ route('assets.index') }}" class="nav-link">
                         <i class="nav-icon fas fa-cube"></i>
-                        <p>Assets</p>
+                        <p>Asset</p>
                     </a>
                 </li>
                 <!-- Tambahkan menu master lainnya di sini -->
@@ -46,7 +46,25 @@
                 <li class="nav-item">
                     <a href="{{ route('asset_purchases.index') }}" class="nav-link">
                         <i class="nav-icon fas fa-file-alt"></i>
-                        <p>Asset Purchase</p>
+                        <p>Pembelian Asset</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('asset_transfers.index') }}" class="nav-link">
+                        <i class="nav-icon fas fa-exchange-alt"></i>
+                        <p>Pemindahan Asset</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('asset_maintenances.index') }}" class="nav-link">
+                        <i class="nav-icon fas fa-cogs"></i>
+                        <p>Perawatan Asset</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('asset_maintenances.index') }}" class="nav-link">
+                        <i class="nav-icon fas fa-wrench"></i>
+                        <p>Perbaikan Asset</p>
                     </a>
                 </li>
                 <!-- Tambahkan menu transaksi lainnya di sini -->

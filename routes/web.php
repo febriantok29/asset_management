@@ -7,6 +7,9 @@ use App\Http\Controllers\Master\AssetController;
 use App\Http\Controllers\Master\VendorController;
 use App\Http\Controllers\Master\AssetLocationController;
 use App\Http\Controllers\Transaction\AssetPurchaseController;
+use App\Http\Controllers\Transaction\AssetTransferController;
+use App\Http\Controllers\Transaction\AssetMaintenanceController;
+use App\Http\Controllers\Transaction\AssetRepairController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,4 +33,7 @@ Route::prefix('master')->group(function () {
 
 Route::prefix('transaction')->group(function () {
     Route::resource('asset_purchases', AssetPurchaseController::class);
+    Route::resource('asset_transfers', AssetTransferController::class);
+    Route::resource('asset_maintenances', AssetMaintenanceController::class);
+    Route::resource('asset_repairs', AssetRepairController::class);
 });
