@@ -23,13 +23,9 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::prefix('master')->group(function () {
     Route::resource('categories', CategoryController::class);
-    Route::get('categories/restore/{id}', [CategoryController::class, 'restore'])->name('categories.restore');
-
     Route::resource('vendors', VendorController::class);
-
-    Route::resource('assets', AssetController::class);
-
     Route::resource('asset_locations', AssetLocationController::class);
+    Route::resource('assets', AssetController::class);
 });
 
 Route::prefix('transaction')->group(function () {

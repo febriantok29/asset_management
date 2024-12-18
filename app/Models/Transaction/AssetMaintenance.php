@@ -4,11 +4,13 @@ namespace App\Models\Transaction;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 use App\Models\Master\Asset;
 
 class AssetMaintenance extends Model
 {
+    use HasFactory;
     use SoftDeletes;
 
     protected $table = 't_asset_maintenance';

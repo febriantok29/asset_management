@@ -16,7 +16,7 @@
         'editRoute' => 'vendors.edit',
         'showRoute' => 'vendors.show',
         'deleteRoute' => 'vendors.destroy',
-        'columns' => ['#', 'Kode', 'Nama Vendor', 'Email', 'Telepon', 'Alamat'],
+        'columns' => ['Kode', 'Nama Vendor', 'Email', 'Telepon', 'Alamat'],
         'fields' => ['code', 'name', 'email', 'phone', 'address'],
         'items' => $vendors,
     ])

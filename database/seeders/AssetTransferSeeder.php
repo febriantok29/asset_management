@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\Transaction\AssetTransfer;
 
 class AssetTransferSeeder extends Seeder
 {
@@ -12,6 +12,6 @@ class AssetTransferSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        AssetTransfer::factory()->count(10)->create();
     }
 }

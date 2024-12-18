@@ -14,7 +14,7 @@
         'editRoute' => 'categories.edit',
         'showRoute' => 'categories.show',
         'deleteRoute' => 'categories.destroy',
-        'columns' => ['#', 'Kode', 'Nama Kategori', 'Deskripsi'],
+        'columns' => ['Kode', 'Nama Kategori', 'Deskripsi'],
         'fields' => ['code', 'name', 'description'],
         'items' => $categories,
     ])

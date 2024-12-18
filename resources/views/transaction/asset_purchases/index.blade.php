@@ -9,13 +9,18 @@
 @endsection
 
 @section('content')
+
     @include('partials.table', [
         'createRoute' => route('asset_purchases.create'),
         'editRoute' => null,
         'showRoute' => 'asset_purchases.show',
-        'deleteRoute' => 'asset_purchases.destroy',
-        'columns' => ['#', 'Tanggal', 'Kode', 'Nama Aset', 'Jumlah', 'Harga', 'Total'],
-        'fields' => ['date', 'code', 'name', 'quantity', 'price', 'total'],
+        'deleteRoute' => null,
+        'columns' => ['Tanggal', 'Kode', 'Nama Aset', 'Jumlah', 'Total'],
+        'fields' => ['purchase_date', 'purchase_code', 'asset.name', 'quantity', 'total_cost'],
         'items' => $assetPurchases,
     ])
+
+    <div class="d-flex justify-content-center mt-3">
+        {{ $assetPurchases->links('pagination::bootstrap-4') }}
+    </div>
 @endsection

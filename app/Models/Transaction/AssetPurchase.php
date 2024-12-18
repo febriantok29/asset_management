@@ -4,13 +4,15 @@ namespace App\Models\Transaction;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+
 use App\Models\Master\Asset;
 use App\Models\Master\Vendor;
 
 class AssetPurchase extends Model
 {
     use SoftDeletes;
-
+    use HasFactory;
 
     protected $table = 't_asset_purchases';
 
@@ -29,11 +31,6 @@ class AssetPurchase extends Model
         'created_at',
         'updated_at',
         'deleted_at',
-    ];
-
-    protected $casts = [
-        'purchase_date' => 'date:Y-m-d',
-        'total_cost' => 'decimal:2',
     ];
 
     public function asset()

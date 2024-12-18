@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Master\Vendor;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Validation\Rule;
 
 class VendorController extends Controller
 {
@@ -33,6 +34,14 @@ class VendorController extends Controller
     {
         $validatedData = $this->validateVendor($request);
 
+        $existingVendor = Vendor::withTrashed()->where('code', $validatedData['code'])->first();
+        if ($existingVendor && $existingVendor->trashed()) {
+            $existingVendor->restore();
+            $existingVendor->update($validatedData);
+
+            return redirect()->route('vendors.index')->with('success', 'Vendor ' . $validatedData['name'] . ' berhasil dipulihkan dan telah diperbarui.');
+        }
+
         Vendor::create($validatedData);
 
         return redirect()->route('vendors.index')->with('success', 'Berhasil menambahkan vendor ' . $validatedData['name'] . '.');
@@ -41,7 +50,14 @@ class VendorController extends Controller
     private function validateVendor(Request $request, $id = null)
     {
         $rules = [
-            'code' => 'required|string|max:16|alpha_num|min:2|unique:m_vendors,code' . ($id ? ",$id" : ''),
+            'code' => [
+                'required',
+                'string',
+                'min:2',
+                'max:16',
+                'alpha_num',
+                Rule::unique('m_vendors', 'code')->ignore($id)->whereNull('deleted_at'),
+            ],
             'name' => 'required|string|max:255|min:2',
             'address' => 'nullable|string',
             'phone' => 'nullable|string',
@@ -111,14 +127,6 @@ class VendorController extends Controller
      */
     public function destroy(Vendor $vendor)
     {
-        if ($vendor->assets->count() > 0) {
-            return redirect()->route('vendors.index')->with('error', 'Gagal menghapus vendor ' . $vendor->name . ' karena memiliki aset terkait.');
-        }
-
-        if ($vendor->assetPurchases->count() > 0) {
-            return redirect()->route('vendors.index')->with('error', 'Gagal menghapus vendor ' . $vendor->name . ' karena memiliki pembelian aset terkait.');
-        }
-
         $vendor->delete();
         return redirect()->route('vendors.index')->with('success', 'Berhasil menghapus vendor ' . $vendor->name . '.');
     }

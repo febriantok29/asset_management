@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\Transaction\AssetMaintenance;
 
 class AssetMaintenanceSeeder extends Seeder
 {
@@ -12,6 +12,6 @@ class AssetMaintenanceSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        AssetMaintenance::factory()->count(10)->create();
     }
 }

@@ -27,6 +27,18 @@
                         <p>Vendors</p>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a href="{{ route('asset_locations.index') }}" class="nav-link">
+                        <i class="nav-icon fas fa-map-marker-alt"></i>
+                        <p>Asset Locations</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('assets.index') }}" class="nav-link">
+                        <i class="nav-icon fas fa-cube"></i>
+                        <p>Assets</p>
+                    </a>
+                </li>
                 <!-- Tambahkan menu master lainnya di sini -->
 
                 <!-- Transaksi Section -->

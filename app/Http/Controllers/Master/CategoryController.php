@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Master;
 
+use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
 use App\Models\Master\Category;
 use Illuminate\Http\Request;
@@ -24,37 +25,32 @@ class CategoryController extends Controller
     // Menyimpan data kategori baru
     public function store(Request $request)
     {
-        $validator = [
-            'code' => 'required|string|max:16|unique:m_categories|alpha_num|min:2',
-            'name' => 'required|string|max:255|min:2',
-            'description' => 'nullable|string',
-        ];
+        $validatedData = $this->validateCategory($request);
 
-        $validatorMessages = [
-            'code.required' => 'Kode kategori wajib diisi!',
-            'code.unique' => 'Kode kategori sudah digunakan, silakan gunakan kode lain.',
-            'code.min' => 'Silakan masukkan minimal 2 karakter untuk kode kategori.',
-            'code.max' => 'Silakan masukkan maksimal 16 karakter untuk kode kategori.',
-            'code.alpha_num' => 'Kode kategori hanya boleh berisi huruf dan angka.',
-            'name.required' => 'Nama kategori wajib diisi!',
-            'name.min' => 'Silakan masukkan minimal 2 karakter untuk nama kategori.',
-            'name.max' => 'Silakan masukkan maksimal 255 karakter untuk nama kategori.',
-            'description.string' => 'Deskripsi kategori harus berupa teks.',
-        ];
+        $existingCategory = Category::withTrashed()->where('code', $validatedData['code'])->first();
+        if ($existingCategory && $existingCategory->trashed()) {
+            $existingCategory->restore();
+            $existingCategory->update($validatedData);
 
-        $validatedData = $request->validate($validator, $validatorMessages);
+            return redirect()->route('categories.index')->with('success', 'Kategori ' . $validatedData['name'] . ' berhasil dipulihkan dan telah diperbarui.');
+        }
 
         Category::create($validatedData);
-
         return redirect()->route('categories.index')->with('success', 'Kategori ' . $validatedData['name'] . ' berhasil ditambahkan.');
     }
-
 
     private function validateCategory(Request $request, $id = null)
     {
         $rules = [
-            'code' => 'required|string|max:16|alpha_num|min:2|unique:m_categories,code' . ($id ? ",$id" : ''),
-            'name' => 'required|string|max:255|min:2',
+            'code' => [
+                'required',
+                'string',
+                'min:2',
+                'max:16',
+                'alpha_num',
+                Rule::unique('m_categories', 'code')->ignore($id)->whereNull('deleted_at'),
+            ],
+            'name' => 'required|string|min:2|max:255',
             'description' => 'nullable|string',
         ];
 
@@ -91,22 +87,8 @@ class CategoryController extends Controller
     // Soft delete kategori
     public function destroy(Category $category)
     {
-        // Check on `Asset` model if there is any asset that uses this category
-
-        if ($category->assets->count() > 0) {
-            return redirect()->route('categories.index')->with('error', 'Kategori ' . $category->name . ' tidak bisa dihapus karena masih digunakan oleh aset.');
-        }
-
         $category->delete();
         return redirect()->route('categories.index')->with('success', 'Kategori ' . $category->name . ' berhasil dihapus.');
-    }
-
-    // Mengembalikan data yang di soft delete
-    public function restore($id)
-    {
-        $category = Category::withTrashed()->find($id);
-        $category->restore();
-        return redirect()->route('categories.index')->with('success', 'Category restored successfully.');
     }
 
     public function show(Category $category)

@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\Transaction\AssetPurchase;
 use App\Models\Master\Asset;
 use App\Models\Master\Vendor;
+use Carbon\Carbon;
+
 
 class AssetPurchaseController extends Controller
 {
@@ -15,7 +17,16 @@ class AssetPurchaseController extends Controller
      */
     public function index()
     {
-        $assetPurchases = AssetPurchase::with(['asset', 'vendor'])->get();
+        $assetPurchases = AssetPurchase::with(['asset', 'vendor'])
+            ->orderBy('purchase_date', 'desc')
+            ->paginate(10);
+
+        // Format tanggal dan total_cost untuk setiap item
+        $assetPurchases->getCollection()->each(function ($purchase) {
+            $purchase->purchase_date = Carbon::parse($purchase->purchase_date)
+                ->translatedFormat('l, d F Y');
+            $purchase->total_cost = 'Rp ' . number_format($purchase->total_cost, 0, ',', '.');
+        });
 
         return view('transaction.asset_purchases.index', compact('assetPurchases'));
     }

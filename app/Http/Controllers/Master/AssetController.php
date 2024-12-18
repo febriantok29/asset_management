@@ -7,6 +7,7 @@ use App\Models\Master\Asset;
 use App\Models\Master\Category;
 use App\Models\Master\Vendor;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class AssetController extends Controller
 {
@@ -27,6 +28,14 @@ class AssetController extends Controller
     public function store(Request $request)
     {
         $validatedData = $this->validateAsset($request);
+
+        $existingAsset = Asset::withTrashed()->where('code', $validatedData['code'])->first();
+        if ($existingAsset && $existingAsset->trashed()) {
+            $existingAsset->restore();
+            $existingAsset->update($validatedData);
+
+            return redirect()->route('assets.index')->with('success', 'Aset ' . $validatedData['name'] . ' berhasil dipulihkan dan telah diperbarui.');
+        }
 
         Asset::create($validatedData);
 
@@ -57,22 +66,6 @@ class AssetController extends Controller
 
     public function destroy(Asset $asset)
     {
-        if ($asset->assetPurchases()->exists()) {
-            return redirect()->route('assets.index')->with('error', 'Aset tidak bisa dihapus karena sudah diajukan pembelian.');
-        }
-
-        if ($asset->assetTransfers()->exists()) {
-            return redirect()->route('assets.index')->with('error', 'Aset tidak bisa dihapus karena aset sudah dipindahkan.');
-        }
-
-        if ($asset->assetMaintenances()->exists()) {
-            return redirect()->route('assets.index')->with('error', 'Aset tidak bisa dihapus karena pernah dilakukan pemeliharaan.');
-        }
-
-        if ($asset->assetRepairs()->exists()) {
-            return redirect()->route('assets.index')->with('error', 'Aset tidak dapat dihapus karena pernah diperbaiki.');
-        }
-
         $asset->delete();
         return redirect()->route('assets.index')->with('success', 'Aset berhasil dihapus.');
     }
@@ -81,7 +74,14 @@ class AssetController extends Controller
     {
 
         $rules = [
-            'code' => 'required|string|min:2|max:16|unique:m_assets,code' . ($id ? ",$id" : ''),
+            'code' => [
+                'required',
+                'string',
+                'min:2',
+                'max:16',
+                'alpha_num',
+                Rule::unique('m_assets', 'code')->ignore($id)->whereNull('deleted_at'),
+            ],
             'name' => 'required|string|min:2|max:255',
             'stock' => 'required|integer|min:0',
             'category_id' => 'required|exists:m_categories,id',
