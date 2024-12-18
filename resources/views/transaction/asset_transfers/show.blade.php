@@ -1,0 +1,1 @@
+<!-- show view for transaction/asset_transfer -->

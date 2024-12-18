@@ -4,45 +4,57 @@ namespace App\Models\Master;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+
+use App\Models\Transaction\AssetPurchase;
+use App\Models\Transaction\AssetTransfer;
+use App\Models\Transaction\AssetMaintenance;
+use App\Models\Transaction\AssetRepair;
 
 class Asset extends Model
 {
     use SoftDeletes;
+    use HasFactory;
 
     protected $table = 'm_assets';
 
-    protected $fillable = ['name', 'status', 'description', 'last_maintenance_at', 'category_id', 'supplier_id', 'purchase_price', 'purchase_date'];
+    protected $fillable = ['code', 'name', 'stock', 'category_id', 'vendor_id', 'description'];
 
-    // Relasi dengan Kategori
+    protected $dates = ['created_at', 'updated_at', 'deleted_at'];
+
+    protected $casts = [
+        'created_at' => 'datetime:Y-m-d H:i:s',
+        'updated_at' => 'datetime:Y-m-d H:i:s',
+        'deleted_at' => 'datetime:Y-m-d H:i:s',
+    ];
+
     public function category()
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(Category::class, 'category_id');
     }
 
-    // Relasi dengan Supplier
-    public function supplier()
+    public function vendor()
     {
-        return $this->belongsTo(Supplier::class);
+        return $this->belongsTo(Vendor::class, 'vendor_id');
     }
 
-    // Method untuk menghitung total assets, assets in maintenance, dll.
-    public static function totalAssets()
+    public function assetPurchases()
     {
-        return self::count();
+        return $this->hasMany(AssetPurchase::class, 'asset_id');
     }
 
-    public static function assetsInMaintenance()
+    public function assetTransfers()
     {
-        return self::where('status', 'maintenance')->count();
+        return $this->hasMany(AssetTransfer::class, 'asset_id');
     }
 
-    public static function assetsUnderRepair()
+    public function assetMaintenances()
     {
-        return self::where('status', 'repair')->count();
+        return $this->hasMany(AssetMaintenance::class, 'asset_id');
     }
 
-    public static function brokenAssets()
+    public function assetRepairs()
     {
-        return self::where('status', 'broken')->count();
+        return $this->hasMany(AssetRepair::class, 'asset_id');
     }
 }

@@ -21,9 +21,17 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
 
+        $this->call([
+            CategorySeeder::class,
+            VendorSeeder::class,
+            AssetLocationSeeder::class,
+            AssetSeeder::class,
 
-        $this->call(AssetSeeder::class);
-        $this->call(CategorySeeder::class);
-        $this->call(SupplierSeeder::class);
+            // Transaction
+            AssetPurchaseSeeder::class,
+            AssetTransferSeeder::class,
+            AssetMaintenanceSeeder::class,
+            AssetRepairSeeder::class,
+        ]);
     }
 }

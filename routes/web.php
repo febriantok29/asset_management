@@ -4,7 +4,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Master\CategoryController;
 use App\Http\Controllers\Master\AssetController;
-use App\Http\Controllers\Master\SupplierController;
+use App\Http\Controllers\Master\VendorController;
+use App\Http\Controllers\Master\AssetLocationController;
+use App\Http\Controllers\Transaction\AssetPurchaseController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,12 +19,15 @@ use App\Http\Controllers\Master\SupplierController;
 |
 */
 
-
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
-Route::resource('categories', CategoryController::class);
-Route::get('categories/restore/{id}', [CategoryController::class, 'restore'])->name('categories.restore');
+Route::prefix('master')->group(function () {
+    Route::resource('categories', CategoryController::class);
+    Route::resource('vendors', VendorController::class);
+    Route::resource('asset_locations', AssetLocationController::class);
+    Route::resource('assets', AssetController::class);
+});
 
-Route::resource('suppliers', SupplierController::class);
-
-Route::resource('assets', AssetController::class);
+Route::prefix('transaction')->group(function () {
+    Route::resource('asset_purchases', AssetPurchaseController::class);
+});
