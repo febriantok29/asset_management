@@ -9,20 +9,17 @@ use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
-    // Menampilkan daftar kategori
     public function index()
     {
-        $categories = Category::all(); // Mengambil semua data kategori yang tidak dihapus
+        $categories = Category::all();
         return view('master.categories.index', compact('categories'));
     }
 
-    // Menampilkan form tambah kategori
     public function create()
     {
         return view('master.categories.create');
     }
 
-    // Menyimpan data kategori baru
     public function store(Request $request)
     {
         $validatedData = $this->validateCategory($request);
@@ -69,13 +66,13 @@ class CategoryController extends Controller
         return $request->validate($rules, $messages);
     }
 
-    // Menampilkan form edit kategori
+
     public function edit(Category $category)
     {
         return view('master.categories.edit', compact('category'));
     }
 
-    // Mengupdate data kategori yang sudah ada
+
     public function update(Request $request, Category $category)
     {
         $validatedData = $this->validateCategory($request, $category->id);
@@ -84,7 +81,6 @@ class CategoryController extends Controller
         return redirect()->route('categories.index')->with('success', 'Berhasil memperbarui kategori ' . $validatedData['name'] . '.');
     }
 
-    // Soft delete kategori
     public function destroy(Category $category)
     {
         $category->delete();

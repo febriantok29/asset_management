@@ -9,7 +9,6 @@ use App\Models\Master\Asset;
 use App\Models\Master\Vendor;
 use Carbon\Carbon;
 
-
 class AssetPurchaseController extends Controller
 {
     /**
@@ -64,28 +63,6 @@ class AssetPurchaseController extends Controller
         return view('transaction.asset_purchases.show', compact('assetPurchase'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, AssetPurchase $assetPurchase)
-    {
-        $validatedData = $this->validateAssetPurchase($request, $assetPurchase->id);
-
-        $assetPurchase->update($validatedData);
-
-        return redirect()->route('asset_purchases.index')->with('success', 'Pembelian aset dengan kode ' . $validatedData['purchase_code'] . ' berhasil diperbarui.');
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(AssetPurchase $assetPurchase)
-    {
-        $assetPurchase->delete();
-
-        return redirect()->route('asset_purchases.index')->with('success', 'Pembelian aset dengan kode ' . $assetPurchase->purchase_code . ' berhasil dihapus.');
-    }
-
     private function validateAssetPurchase(Request $request, $id = null)
     {
         $rules = [
@@ -121,49 +98,20 @@ class AssetPurchaseController extends Controller
 
         return $request->validate($rules, $messages);
     }
-    /**
-     * Generate a unique purchase code for asset purchases.
-     *
-     * The purchase code format is YYYY/MM/DD-AP###, where ### is a sequential number
-     * that resets each day. For example:
-     * - 2024/12/15-AP001 (first purchase of the day)
-     * - 2024/12/15-AP002 (second purchase of the same day)
-     *
-     * @return string The generated purchase code.
-     */
+
     private function generatePurchaseCode(): string
     {
-        // Get the current date in the format YYYY/MM/DD.
-        $currentDate = date('Y/m/d');
+        $currentDate = now()->format('Y/m/d');
+        $lastPurchase = AssetPurchase::latest('id')->first();
 
-        // Retrieve the most recent purchase, ordered by `purchase_code` in descending order.
-        // This ensures we get the latest purchase code.
-        $lastPurchase = AssetPurchase::orderBy('purchase_code', 'desc')->first();
-
-        // If there are no previous purchases, start with the first code of the day.
         if (!$lastPurchase) {
-            return $currentDate . '-AP001'; // Example: 2024/12/15-AP001
+            return $currentDate . '-AP001';
         }
 
-        // Extract the `purchase_code` from the last purchase record.
         $lastPurchaseCode = $lastPurchase->purchase_code;
-
-        // Extract the date portion (first 10 characters) from the last purchase code.
-        $lastPurchaseDate = substr($lastPurchaseCode, 0, 10);
-
-        // If the last purchase date does not match the current date, reset the sequence to 1.
-        if ($lastPurchaseDate != $currentDate) {
-            return $currentDate . '-AP001'; // Start a new sequence for the new date.
-        }
-
-        // Extract the numeric portion (last 3 characters) and convert it to an integer.
         $lastPurchaseNumber = (int) substr($lastPurchaseCode, -3);
+        $newPurchaseNumber = str_pad($lastPurchaseNumber + 1, 3, '0', STR_PAD_LEFT);
 
-        // Increment the numeric portion of the last purchase code by 1.
-        $newPurchaseNumber = $lastPurchaseNumber + 1;
-
-        // Return the new purchase code with the current date and the new number, padded to 3 digits.
-        return $currentDate . '-AP' . str_pad($newPurchaseNumber, 3, '0', STR_PAD_LEFT);
-        // Example: 2024/12/15-AP002, 2024/12/15-AP003, etc.
+        return $currentDate . '-AP' . $newPurchaseNumber;
     }
 }
