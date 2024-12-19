@@ -1,6 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+
+use App\Models\Transaction\AssetTransfer;
+
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Master\CategoryController;
 use App\Http\Controllers\Master\AssetController;
@@ -37,3 +40,5 @@ Route::prefix('transaction')->group(function () {
     Route::resource('asset_maintenances', AssetMaintenanceController::class);
     Route::resource('asset_repairs', AssetRepairController::class);
 });
+
+Route::get('/get-asset-location/{assetId}', [AssetTransferController::class, 'getAssetLocation']);

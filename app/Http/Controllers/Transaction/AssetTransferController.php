@@ -62,7 +62,6 @@ class AssetTransferController extends Controller
     private function validateAssetTransfer(Request $request)
     {
         $rules = [
-            'transfer_code' => 'required|string|min:2|max:16|unique:t_asset_transfers,transfer_code',
             'asset_id' => 'required|exists:m_assets,id',
             'from_location_id' => 'nullable|exists:m_locations,id',
             'to_location_id' => 'required|exists:m_locations,id',
@@ -102,5 +101,17 @@ class AssetTransferController extends Controller
         $newNumber = str_pad($lastNumber + 1, 3, '0', STR_PAD_LEFT);
 
         return $currentDate . '-AT' . $newNumber;
+    }
+
+    public function getAssetLocation($assetId)
+    {
+        $lastTransfer = AssetTransfer::where('asset_id', $assetId)
+            ->orderBy('transfer_date', 'desc')
+            ->first();
+
+        return response()->json([
+            'from_location_id' => $lastTransfer->to_location_id ?? null,
+            'from_location_name' => $lastTransfer->toLocation->name ?? null,
+        ]);
     }
 }

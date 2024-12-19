@@ -48,6 +48,8 @@ class AssetPurchaseController extends Controller
     {
         $validatedData = $this->validateAssetPurchase($request);
 
+        $validatedData['total_cost'] = str_replace('.', '', $request->input('total_cost'));
+
         $validatedData['purchase_code'] = $this->generatePurchaseCode();
 
         AssetPurchase::create($validatedData);
@@ -66,7 +68,6 @@ class AssetPurchaseController extends Controller
     private function validateAssetPurchase(Request $request, $id = null)
     {
         $rules = [
-            'purchase_code' => 'required|string|min:2|max:16|unique:t_asset_purchases,purchase_code' . ($id ? ",$id" : ''),
             'asset_id' => 'required|exists:m_assets,id',
             'vendor_id' => 'required|exists:m_vendors,id',
             'quantity' => 'required|integer|min:1',
@@ -76,8 +77,6 @@ class AssetPurchaseController extends Controller
         ];
 
         $messages = [
-            'purchase_code.required' => 'Kode Pembelian harus diisi.',
-            'purchase_code.string' => 'Kode Pembelian harus berupa teks.',
             'purchase_code.min' => 'Kode Pembelian minimal terdiri dari :min karakter.',
             'purchase_code.max' => 'Kode Pembelian maksimal terdiri dari :max karakter.',
             'purchase_code.unique' => 'Kode Pembelian sudah digunakan.',
