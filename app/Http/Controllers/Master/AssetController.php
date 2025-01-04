@@ -72,21 +72,20 @@ class AssetController extends Controller
 
     private function validateAsset(Request $request, $id = null)
     {
-
         $rules = [
             'code' => [
                 'required',
                 'string',
                 'min:2',
                 'max:16',
-                'alpha_num',
+                'regex:/^[a-zA-Z0-9-]+$/',
                 Rule::unique('m_assets', 'code')->ignore($id)->whereNull('deleted_at'),
             ],
             'name' => 'required|string|min:2|max:255',
             'stock' => 'required|integer|min:0',
             'category_id' => 'required|exists:m_categories,id',
             'vendor_id' => 'required|exists:m_vendors,id',
-            'description' => 'nullable|string',
+            'description' => 'nullable|string|max:1000',
         ];
 
         $messages = [
@@ -94,6 +93,7 @@ class AssetController extends Controller
             'code.unique' => 'Kode aset sudah digunakan, silakan gunakan kode lain.',
             'code.min' => 'Kode aset minimal 2 karakter.',
             'code.max' => 'Kode aset maksimal 16 karakter.',
+            'code.regex' => 'Kode aset hanya boleh mengandung huruf, angka, dan tanda hubung (-).',
             'name.required' => 'Nama aset wajib diisi!',
             'name.min' => 'Nama aset minimal 2 karakter.',
             'name.max' => 'Nama aset maksimal 255 karakter.',
@@ -105,6 +105,7 @@ class AssetController extends Controller
             'vendor_id.required' => 'Vendor aset wajib diisi!',
             'vendor_id.exists' => 'Vendor aset tidak valid.',
             'description.string' => 'Deskripsi aset harus berupa teks.',
+            'description.max' => 'Deskripsi aset maksimal 1000 karakter.',
         ];
 
         return $request->validate($rules, $messages);

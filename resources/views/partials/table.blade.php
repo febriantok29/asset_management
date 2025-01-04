@@ -34,7 +34,6 @@
                                             {{ $item->$field }}
                                         @endif
                                     @endif
-
                                 </td>
                             @endforeach
                             <td>
@@ -58,12 +57,13 @@
                                 @endif
                             </td>
                         </tr>
-                    @endforeach
+                    @empty
+                        <tr>
+                            <td colspan="{{ count($columns) + 1 }}" class="text-center">Tidak ada data</td>
+                        </tr>
+                    @endforelse
                 </tbody>
             </table>
-            @if ($items->isEmpty())
-                <p class="text-center">Tidak ada data</p>
-            @endif
         </div>
     </div>
 </div>
