@@ -11,28 +11,15 @@ use Carbon\Carbon;
 
 class AssetPurchaseController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         $assetPurchases = AssetPurchase::with(['asset', 'vendor'])
             ->orderBy('purchase_date', 'desc')
             ->paginate(10);
 
-        // Format tanggal dan total_cost untuk setiap item
-        $assetPurchases->getCollection()->each(function ($purchase) {
-            $purchase->purchase_date = Carbon::parse($purchase->purchase_date)
-                ->translatedFormat('l, d F Y');
-            $purchase->total_cost = 'Rp ' . number_format($purchase->total_cost, 0, ',', '.');
-        });
-
         return view('transaction.asset_purchases.index', compact('assetPurchases'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         $assets = Asset::all();
@@ -41,15 +28,14 @@ class AssetPurchaseController extends Controller
         return view('transaction.asset_purchases.create', compact('assets', 'vendors'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
+        // Clean the total_cost input before validation
+        $request->merge([
+            'total_cost' => str_replace(['.', ','], '', $request->input('total_cost'))
+        ]);
+
         $validatedData = $this->validateAssetPurchase($request);
-
-        $validatedData['total_cost'] = str_replace('.', '', $request->input('total_cost'));
-
         $validatedData['purchase_code'] = $this->generatePurchaseCode();
 
         AssetPurchase::create($validatedData);
@@ -57,9 +43,6 @@ class AssetPurchaseController extends Controller
         return redirect()->route('asset_purchases.index')->with('success', 'Pembelian aset dengan kode ' . $validatedData['purchase_code'] . ' berhasil ditambahkan.');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(AssetPurchase $assetPurchase)
     {
         return view('transaction.asset_purchases.show', compact('assetPurchase'));
@@ -70,9 +53,18 @@ class AssetPurchaseController extends Controller
         $rules = [
             'asset_id' => 'required|exists:m_assets,id',
             'vendor_id' => 'required|exists:m_vendors,id',
-            'quantity' => 'required|integer|min:1',
+            'quantity' => 'required|integer|min:1|max:2147483647',
             'purchase_date' => 'required|date',
-            'total_cost' => 'required|numeric|min:0',
+            'total_cost' => [
+                'required',
+                'numeric',
+                'min:0',
+                function ($attribute, $value, $fail) {
+                    if ($value > 999999999999999999.99) {
+                        $fail('Total Biaya tidak boleh lebih dari 999,999,999,999,999,999.99.');
+                    }
+                },
+            ],
             'description' => 'nullable|string',
         ];
 
@@ -100,7 +92,7 @@ class AssetPurchaseController extends Controller
 
     private function generatePurchaseCode(): string
     {
-        $currentDate = now()->format('Y/m/d');
+        $currentDate = Carbon::now()->format('Y/m/d');
         $lastPurchase = AssetPurchase::latest('id')->first();
 
         if (!$lastPurchase) {

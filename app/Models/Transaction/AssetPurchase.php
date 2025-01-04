@@ -5,7 +5,7 @@ namespace App\Models\Transaction;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-
+use Carbon\Carbon;
 use App\Models\Master\Asset;
 use App\Models\Master\Vendor;
 
@@ -41,5 +41,15 @@ class AssetPurchase extends Model
     public function vendor()
     {
         return $this->belongsTo(Vendor::class, 'vendor_id');
+    }
+
+    public function getFormattedPurchaseDateAttribute()
+    {
+        return Carbon::parse($this->purchase_date)->translatedFormat('l, d F Y');
+    }
+
+    public function getFormattedTotalCostAttribute()
+    {
+        return 'Rp ' . number_format($this->total_cost, 0, ',', '.');
     }
 }
