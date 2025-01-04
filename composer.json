@@ -9,6 +9,7 @@
     "license": "MIT",
     "require": {
         "php": "*",
+        "barryvdh/laravel-dompdf": "^3.0",
         "guzzlehttp/guzzle": "*",
         "jeroennoten/laravel-adminlte": "*",
         "laravel/framework": "*",
