@@ -7,17 +7,20 @@
 @section('page_title', 'Daftar Lokasi Aset')
 
 @section('breadcrumb')
-    <li class="breadcrumb-item active">Home</li>
+    <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
+    <li class="breadcrumb-item active">Daftar Lokasi Aset</li>
 @endsection
 
 @section('content')
-    @include('partials.table', [
-        'createRoute' => route('asset_locations.create'),
-        'editRoute' => 'asset_locations.edit',
-        'showRoute' => 'asset_locations.show',
-        'deleteRoute' => 'asset_locations.destroy',
-        'columns' => ['Kode', 'Nama Lokasi', 'Alamat'],
-        'fields' => ['code', 'name', 'address'],
-        'items' => $locations,
-    ])
+    <div class="container mt-4">
+        @include('partials.table', [
+            'createRoute' => route('asset_locations.create'),
+            'editRoute' => 'asset_locations.edit',
+            'showRoute' => 'asset_locations.show',
+            'deleteRoute' => 'asset_locations.destroy',
+            'columns' => ['Kode', 'Nama Lokasi', 'Alamat'],
+            'fields' => ['code', 'name', 'address'],
+            'items' => $locations,
+        ])
+    </div>
 @endsection
