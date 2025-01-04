@@ -3,15 +3,10 @@
 namespace App\Http\Controllers\Transaction;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
-
-
 use App\Models\Master\Asset;
 use App\Models\Master\AssetLocation;
 use App\Models\Transaction\AssetTransfer;
-
-
+use Illuminate\Http\Request;
 
 class AssetTransferController extends Controller
 {
@@ -21,7 +16,7 @@ class AssetTransferController extends Controller
     public function index()
     {
         $assetTransfers = AssetTransfer::with(['asset', 'fromLocation', 'toLocation'])
-            ->orderBy('transfer_date', 'desc')->get();
+            ->orderBy('transfer_date', 'desc')->paginate(10);
 
         return view('transaction.asset_transfers.index', compact('assetTransfers'));
     }
@@ -63,7 +58,7 @@ class AssetTransferController extends Controller
     {
         $rules = [
             'asset_id' => 'required|exists:m_assets,id',
-            'from_location_id' => 'nullable|exists:m_locations,id',
+            'from_location_id' => 'required|exists:m_locations,id',
             'to_location_id' => 'required|exists:m_locations,id',
             'quantity' => 'required|integer|min:1',
             'transfer_date' => 'required|date',
@@ -73,6 +68,7 @@ class AssetTransferController extends Controller
         $messages = [
             'asset_id.required' => 'Silakan pilih aset yang akan ditransfer.',
             'asset_id.exists' => 'Silakan pilih aset yang tersedia.',
+            'from_location_id.required' => 'Silakan pilih asal lokasi transfer.',
             'from_location_id.exists' => 'Silakan pilih asal lokasi yang valid.',
             'to_location_id.required' => 'Silakan pilih tujuan lokasi transfer.',
             'to_location_id.exists' => 'Silakan pilih tujuan lokasi yang valid.',
@@ -86,7 +82,6 @@ class AssetTransferController extends Controller
         return $request->validate($rules, $messages);
     }
 
-    // Auto-Generated, with format: YYYY/MM/DD-ATXXX, where XXX is auto-increment with "0" padding
     private function generateTransferCode()
     {
         $currentDate = now()->format('Y/m/d');
@@ -105,9 +100,14 @@ class AssetTransferController extends Controller
 
     public function getAssetLocation($assetId)
     {
-        $lastTransfer = AssetTransfer::where('asset_id', $assetId)
-            ->orderBy('transfer_date', 'desc')
-            ->first();
+        $lastTransfer = AssetTransfer::where('asset_id', $assetId)->latest('id')->first();
+
+        if (!$lastTransfer) {
+            return response()->json([
+                'from_location_id' => null,
+                'from_location_name' => null,
+            ]);
+        }
 
         return response()->json([
             'from_location_id' => $lastTransfer->to_location_id ?? null,

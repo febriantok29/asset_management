@@ -5,7 +5,7 @@ namespace App\Models\Transaction;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-
+use Carbon\Carbon;
 use App\Models\Master\Asset;
 use App\Models\Master\AssetLocation;
 
@@ -16,9 +16,22 @@ class AssetTransfer extends Model
 
     protected $table = 't_asset_transfers';
 
-    protected $fillable = ['transfer_code', 'asset_id', 'from_location_id', 'to_location_id', 'quantity', 'transfer_date', 'description'];
+    protected $fillable = [
+        'transfer_code',
+        'asset_id',
+        'from_location_id',
+        'to_location_id',
+        'quantity',
+        'transfer_date',
+        'description'
+    ];
 
-    protected $dates = ['transfer_date', 'created_at', 'updated_at', 'deleted_at'];
+    protected $dates = [
+        'transfer_date',
+        'created_at',
+        'updated_at',
+        'deleted_at'
+    ];
 
     protected $casts = [
         'quantity' => 'integer'
@@ -37,5 +50,10 @@ class AssetTransfer extends Model
     public function toLocation()
     {
         return $this->belongsTo(AssetLocation::class, 'to_location_id');
+    }
+
+    public function getFormattedTransferDateAttribute()
+    {
+        return Carbon::parse($this->transfer_date)->translatedFormat('l, d F Y');
     }
 }

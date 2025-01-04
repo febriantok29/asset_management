@@ -9,46 +9,17 @@
 @endsection
 
 @section('content')
-    <div class="card">
-        <div class="card-header">
-            <a href="{{ route('asset_transfers.create') }}" class="btn btn-primary"><i class="fas fa-plus"></i> Tambah
-                Transfer</a>
-        </div>
-        <div class="card-body">
-            @if ($assetTransfers->count())
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Kode Transfer</th>
-                            <th>Aset</th>
-                            <th>Dari Lokasi</th>
-                            <th>Ke Lokasi</th>
-                            <th>Jumlah</th>
-                            <th>Tanggal</th>
-                            <th>Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($assetTransfers as $transfer)
-                            <tr>
-                                <td>{{ $transfer->transfer_code }}</td>
-                                <td>{{ $transfer->asset->name }}</td>
-                                <td>{{ $transfer->fromLocation->name ?? 'N/A' }}</td>
-                                <td>{{ $transfer->toLocation->name }}</td>
-                                <td>{{ $transfer->quantity }}</td>
-                                <td>{{ \Carbon\Carbon::parse($transfer->created_at)->translatedFormat('l, d F Y H:i') }}
-                                </td>
-                                <td>
-                                    <a href="{{ route('asset_transfers.show', $transfer->id) }}"
-                                        class="btn btn-info btn-sm">Lihat</a>
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            @else
-                <p class="text-center">Belum ada data transfer aset.</p>
-            @endif
-        </div>
+    @include('partials.table', [
+        'createRoute' => route('asset_transfers.create'),
+        'editRoute' => null,
+        'showRoute' => 'asset_transfers.show',
+        'deleteRoute' => null,
+        'columns' => ['Kode Transfer', 'Aset', 'Dari Lokasi', 'Ke Lokasi', 'Jumlah', 'Tanggal'],
+        'fields' => ['transfer_code', 'asset.name', 'fromLocation.name', 'toLocation.name', 'quantity', 'formatted_transfer_date'],
+        'items' => $assetTransfers,
+    ])
+
+    <div class="d-flex justify-content-center mt-3">
+        {{ $assetTransfers->links('pagination::bootstrap-4') }}
     </div>
 @endsection
