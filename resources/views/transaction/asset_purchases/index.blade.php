@@ -16,7 +16,7 @@
         'showRoute' => 'asset_purchases.show',
         'deleteRoute' => null,
         'columns' => ['Tanggal', 'Kode', 'Nama Aset', 'Jumlah', 'Total'],
-        'fields' => ['purchase_date', 'purchase_code', 'asset.name', 'quantity', 'total_cost'],
+        'fields' => ['formatted_purchase_date', 'purchase_code', 'asset.name', 'quantity', 'formatted_total_cost'],
         'items' => $assetPurchases,
     ])
 
