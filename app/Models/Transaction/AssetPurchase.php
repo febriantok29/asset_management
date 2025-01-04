@@ -2,12 +2,12 @@
 
 namespace App\Models\Transaction;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Carbon\Carbon;
 use App\Models\Master\Asset;
 use App\Models\Master\Vendor;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class AssetPurchase extends Model
 {
@@ -45,7 +45,12 @@ class AssetPurchase extends Model
 
     public function getFormattedPurchaseDateAttribute()
     {
-        return Carbon::parse($this->purchase_date)->translatedFormat('l, d F Y');
+        if (isset($this->purchase_date)) {
+            return Carbon::parse($this->purchase_date)->translatedFormat('l, d F Y');
+        }
+
+        return '-';
+
     }
 
     public function getFormattedTotalCostAttribute()
