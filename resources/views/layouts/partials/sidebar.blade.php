@@ -68,6 +68,15 @@
                     </a>
                 </li>
                 <!-- Tambahkan menu transaksi lainnya di sini -->
+
+                {{-- Report Section --}}
+                <li class="nav-header" style="margin-top: 20px;">LAPORAN</li>
+                <li class="nav-item">
+                    <a href="{{ route('report.assets_summary') }}" class="nav-link">
+                        <i class="nav-icon fas fa-file-alt"></i>
+                        <p>Rekap Asset</p>
+                    </a>
+                </li>
             </ul>
         </nav>
     </div>
