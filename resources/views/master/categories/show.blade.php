@@ -4,10 +4,17 @@
 
 @section('page_title', 'Detail Kategori')
 
+@section('breadcrumb')
+    <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
+    <li class="breadcrumb-item"><a href="{{ route('categories.index') }}">Daftar Kategori</a></li>
+    <li class="breadcrumb-item active">Detail Kategori</li>
+@endsection
+
 @section('content')
     <div class="card">
         <div class="card-header">
             <a href="{{ route('categories.index') }}" class="btn btn-primary"><i class="fas fa-arrow-left"></i> Kembali</a>
+            <a href="{{ route('categories.edit', $category->id) }}" class="btn btn-warning"><i class="fas fa-edit"></i> Edit</a>
         </div>
         <div class="card-body">
             <div class="row">
