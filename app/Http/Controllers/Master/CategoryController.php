@@ -9,9 +9,15 @@ use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $categories = Category::all();
+        $search = $request->input('search');
+        $categories = Category::when($search, function ($query, $search) {
+            return $query->where('name', 'like', "%{$search}%")
+                         ->orWhere('code', 'like', "%{$search}%")
+                         ->orWhere('description', 'like', "%{$search}%");
+        })->get();
+
         return view('master.categories.index', compact('categories'));
     }
 
@@ -66,12 +72,10 @@ class CategoryController extends Controller
         return $request->validate($rules, $messages);
     }
 
-
     public function edit(Category $category)
     {
         return view('master.categories.edit', compact('category'));
     }
-
 
     public function update(Request $request, Category $category)
     {
