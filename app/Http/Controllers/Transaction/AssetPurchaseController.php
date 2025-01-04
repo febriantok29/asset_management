@@ -69,9 +69,6 @@ class AssetPurchaseController extends Controller
         ];
 
         $messages = [
-            'purchase_code.min' => 'Kode Pembelian minimal terdiri dari :min karakter.',
-            'purchase_code.max' => 'Kode Pembelian maksimal terdiri dari :max karakter.',
-            'purchase_code.unique' => 'Kode Pembelian sudah digunakan.',
             'asset_id.required' => 'Aset harus dipilih.',
             'asset_id.exists' => 'Aset tidak valid.',
             'vendor_id.required' => 'Vendor harus dipilih.',

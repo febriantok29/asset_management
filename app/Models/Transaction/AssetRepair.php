@@ -38,4 +38,9 @@ class AssetRepair extends Model
     {
         return $this->belongsTo(Asset::class, 'asset_id');
     }
+
+    public function getFormattedCostAttribute()
+    {
+        return 'Rp' . number_format($this->cost, 0, ',', '.');
+    }
 }

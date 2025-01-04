@@ -30,6 +30,8 @@
                                     @else
                                         @if ($field == 'description')
                                             {{ Str::limit($item->$field, 25) }}
+                                        @elseif ($field == 'cost')
+                                            {{ $item->formatted_cost }}
                                         @else
                                             {{ $item->$field }}
                                         @endif

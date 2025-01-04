@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Transaction;
 
 use App\Http\Controllers\Controller;
 use App\Models\Transaction\AssetRepair;
+use App\Models\Master\Asset;
 use Illuminate\Http\Request;
 
 class AssetRepairController extends Controller
@@ -24,7 +25,8 @@ class AssetRepairController extends Controller
      */
     public function create()
     {
-        return view('transaction.asset_repairs.create');
+        $assets = Asset::all();
+        return view('transaction.asset_repairs.create', compact('assets'));
     }
 
     /**
@@ -52,7 +54,6 @@ class AssetRepairController extends Controller
     private function validateAssetRepair(Request $request)
     {
         $rules = [
-            'repair_code' => 'required|string|min:2|max:16|unique:t_asset_repairs,repair_code',
             'asset_id' => 'required|exists:m_assets,id',
             'technician_name' => 'nullable',
             'repair_date' => 'required|date',
@@ -62,10 +63,6 @@ class AssetRepairController extends Controller
         ];
 
         $messages = [
-            'repair_code.required' => 'Kode repair harus diisi.',
-            'repair_code.string' => 'Kode repair harus berupa teks.',
-            'repair_code.min' => 'Kode repair minimal 2 karakter.',
-            'repair_code.max' => 'Kode repair maksimal 16 karakter.',
             'asset_id.required' => 'Silakan pilih aset yang akan diperbaiki.',
             'asset_id.exists' => 'Silakan pilih aset yang tersedia.',
             'repair_date.required' => 'Tanggal repair harus diisi.',

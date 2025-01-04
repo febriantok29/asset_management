@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Transaction;
 
 use App\Http\Controllers\Controller;
+use App\Models\Master\Asset;
 use App\Models\Transaction\AssetMaintenance;
 use Illuminate\Http\Request;
 
@@ -24,7 +25,8 @@ class AssetMaintenanceController extends Controller
      */
     public function create()
     {
-        return view('transaction.asset_maintenances.create');
+        $assets = Asset::all();
+        return view('transaction.asset_maintenances.create', compact('assets'));
     }
 
     /**
@@ -52,24 +54,19 @@ class AssetMaintenanceController extends Controller
     private function validateAssetMaintenance(Request $request)
     {
         $rules = [
-            'maintenance_code' => 'required|string|min:2|max:16|unique:t_asset_maintenance,maintenance_code',
             'asset_id' => 'required|exists:m_assets,id',
-            'maintenance_date' => 'required|date',
+            'maintenance_date' => 'required|date|before_or_equal:today',
             'issue' => 'nullable',
             'technician' => 'nullable',
             'cost' => 'nullable|numeric',
         ];
 
         $messages = [
-            'maintenance_code.required' => 'Kode Maintenance harus diisi.',
-            'maintenance_code.string' => 'Kode Maintenance harus berupa teks.',
-            'maintenance_code.min' => 'Kode Maintenance minimal terdiri dari :min karakter.',
-            'maintenance_code.max' => 'Kode Maintenance maksimal terdiri dari :max karakter.',
-            'maintenance_code.unique' => 'Kode Maintenance sudah digunakan.',
             'asset_id.required' => 'Aset harus dipilih.',
             'asset_id.exists' => 'Aset tidak valid.',
             'maintenance_date.required' => 'Tanggal Maintenance harus diisi.',
             'maintenance_date.date' => 'Tanggal Maintenance harus berupa tanggal.',
+            'maintenance_date.before_or_equal' => 'Tanggal Maintenance tidak boleh lebih dari hari ini.',
             'cost.numeric' => 'Biaya Maintenance harus berupa angka.',
         ];
 

@@ -5,13 +5,11 @@ namespace App\Models\Transaction;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-
 use App\Models\Master\Asset;
 
 class AssetMaintenance extends Model
 {
-    use HasFactory;
-    use SoftDeletes;
+    use HasFactory, SoftDeletes;
 
     protected $table = 't_asset_maintenance';
 
@@ -36,5 +34,15 @@ class AssetMaintenance extends Model
     public function asset()
     {
         return $this->belongsTo(Asset::class, 'asset_id');
+    }
+
+    public function getFormattedCostAttribute()
+    {
+        return 'Rp ' . number_format($this->cost, 2, ',', '.');
+    }
+
+    public function getFormattedMaintenanceDateAttribute()
+    {
+        return $this->maintenance_date->translatedFormat('l, d F Y');
     }
 }
