@@ -34,7 +34,7 @@ class AssetLocationController extends Controller
 
         AssetLocation::create($validatedData);
 
-        return redirect()->route('asset_locations.index')->with('success', 'Location aset berhasil ditambahkan.');
+        return redirect()->route('asset_locations.index')->with('success', 'Lokasi aset berhasil ditambahkan.');
     }
 
     public function edit(AssetLocation $assetLocation)
@@ -51,6 +51,11 @@ class AssetLocationController extends Controller
         return redirect()->route('asset_locations.index')->with('success', 'Lokasi aset berhasil diperbarui.');
     }
 
+    public function show(AssetLocation $assetLocation)
+    {
+        return view('master.asset_locations.show', compact('assetLocation'));
+    }
+
     public function destroy(AssetLocation $assetLocation)
     {
         $assetLocation->delete();
@@ -60,14 +65,14 @@ class AssetLocationController extends Controller
     private function validateAssetLocation(Request $request, $id = null)
     {
         $rules = [
-            'name' => 'required|string|min:2|max:255|unique:m_asset_locations,name' . ($id ? ",$id" : ''),
+            'name' => 'required|string|min:2|max:255|unique:m_locations,name' . ($id ? ",$id" : ''),
             'code' => [
                 'required',
                 'string',
                 'min:2',
                 'max:50',
                 'alpha_num',
-                Rule::unique('m_asset_locations', 'code')->ignore($id)->whereNull('deleted_at'),
+                Rule::unique('m_locations', 'code')->ignore($id)->whereNull('deleted_at'),
             ],
             'address' => 'nullable|string',
         ];
