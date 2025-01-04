@@ -2,12 +2,12 @@
 
 namespace App\Models\Transaction;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Carbon\Carbon;
 use App\Models\Master\Asset;
 use App\Models\Master\AssetLocation;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class AssetTransfer extends Model
 {
@@ -23,18 +23,18 @@ class AssetTransfer extends Model
         'to_location_id',
         'quantity',
         'transfer_date',
-        'description'
+        'description',
     ];
 
     protected $dates = [
         'transfer_date',
         'created_at',
         'updated_at',
-        'deleted_at'
+        'deleted_at',
     ];
 
     protected $casts = [
-        'quantity' => 'integer'
+        'quantity' => 'integer',
     ];
 
     public function asset()
