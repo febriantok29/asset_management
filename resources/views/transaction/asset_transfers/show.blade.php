@@ -48,8 +48,7 @@
                 <div class="col-md-6 mb-3">
                     <label for="transfer_date" class="form-label">Tanggal</label>
                     <input type="text" id="transfer_date" class="form-control"
-                        value="{{ \Carbon\Carbon::parse($assetTransfer->transfer_date)->translatedFormat('l, d F Y') }}"
-                        disabled>
+                        value="{{ $assetTransfer->formatted_transfer_date }}" disabled>
                 </div>
             </div>
             <div class="row">
