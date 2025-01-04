@@ -1,5 +1,3 @@
-<!-- create view for master/vendors -->
-
 @extends('layouts.app')
 
 @section('title', 'Buat Vendor Baru')
@@ -23,6 +21,9 @@
                             <input type="text" name="name" id="name"
                                 class="form-control @error('name') is-invalid @enderror" value="{{ old('name') }}"
                                 required>
+                            @error('name')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
                     </div>
                     <div class="col-md-3">
@@ -31,10 +32,12 @@
                             <input type="text" name="code" id="code"
                                 class="form-control @error('code') is-invalid @enderror" value="{{ old('code') }}"
                                 required>
+                            @error('code')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
                     </div>
                 </div>
-
 
                 <div class="row">
                     <div class="col-md-6">
@@ -43,6 +46,9 @@
                             <input type="email" name="email" id="email"
                                 class="form-control @error('email') is-invalid @enderror" value="{{ old('email') }}"
                                 required>
+                            @error('email')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -51,16 +57,20 @@
                             <input type="text" name="phone" id="phone"
                                 class="form-control @error('phone') is-invalid @enderror" value="{{ old('phone') }}"
                                 required>
+                            @error('phone')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
                     </div>
                 </div>
 
-
                 <div class="form-group mb-3">
                     <label for="address">Alamat</label>
                     <textarea name="address" id="address" class="form-control @error('address') is-invalid @enderror">{{ old('address') }}</textarea>
+                    @error('address')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
                 </div>
-
 
                 <div class="form-group mb-3">
                     <div class="col-md-6 offset-md-4">

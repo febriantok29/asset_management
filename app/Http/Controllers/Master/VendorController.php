@@ -60,7 +60,11 @@ class VendorController extends Controller
             ],
             'name' => 'required|string|max:255|min:2',
             'address' => 'nullable|string',
-            'phone' => 'nullable|string',
+            'phone' => [
+                'nullable',
+                'string',
+                'regex:/^(0|\+62|62)[0-9]{8,14}$/',
+            ],
             'email' => 'nullable|email',
         ];
 
@@ -75,6 +79,7 @@ class VendorController extends Controller
             'name.max' => 'Silakan masukkan maksimal 255 karakter untuk nama vendor.',
             'address.string' => 'Alamat vendor harus berupa teks.',
             'phone.string' => 'Nomor telepon vendor harus berupa teks.',
+            'phone.regex' => 'Nomor telepon harus diawali dengan 0, +62, atau 62, dan hanya boleh berisi angka dengan panjang 9-15 digit.',
             'email.email' => 'Format email tidak valid.',
         ];
 
