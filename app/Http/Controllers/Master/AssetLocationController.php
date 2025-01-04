@@ -65,7 +65,13 @@ class AssetLocationController extends Controller
     private function validateAssetLocation(Request $request, $id = null)
     {
         $rules = [
-            'name' => 'required|string|min:2|max:255|unique:m_locations,name' . ($id ? ",$id" : ''),
+            'name' => [
+                'required',
+                'string',
+                'min:2',
+                'max:255',
+                Rule::unique('m_locations', 'name')->ignore($id)->whereNull('deleted_at'),
+            ],
             'code' => [
                 'required',
                 'string',
