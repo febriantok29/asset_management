@@ -51,7 +51,7 @@ class ReportController extends Controller
         $purchasesCount = $data->map(function ($vendor) {
             return $vendor->assetPurchases->count();
         })->sum();
-        
+
         return view('reports.vendor_purchases.vendor_purchases', compact('data', 'purchasesCount'));
     }
 
@@ -70,19 +70,19 @@ class ReportController extends Controller
 
     private function getLocationTransfersData()
     {
-        return AssetTransfer::with('asset', 'location')->get();
+        return AssetTransfer::with('asset', 'fromLocation', 'toLocation')->get();
     }
 
     public function locationTransfers()
     {
         $data = $this->getLocationTransfersData();
-        return view('reports.location_transfers', compact('data'));
+        return view('reports.location_transfers.location_transfers', compact('data'));
     }
 
     public function locationTransfersPdf()
     {
         $data = $this->getLocationTransfersData();
-        $pdf = PDF::loadView('reports.location_transfers_pdf', compact('data'));
+        $pdf = PDF::loadView('reports.location_transfers.location_transfers_pdf', compact('data'));
         return $pdf->download('transfer_lokasi_' . $this->getDateTimeNowFileNaming() . '.pdf');
     }
 
