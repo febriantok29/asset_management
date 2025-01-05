@@ -29,7 +29,10 @@
                                     @if (str_contains($field, '.'))
                                         @php
                                             $relation = explode('.', $field);
-                                            $value = optional($item->{$relation[0]})->{$relation[1]};
+                                            $value = $item;
+                                            foreach ($relation as $rel) {
+                                                $value = optional($value)->$rel;
+                                            }
                                         @endphp
                                         {{ $value }}
                                     @else

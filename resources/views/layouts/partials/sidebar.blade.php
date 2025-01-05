@@ -1,6 +1,6 @@
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <a href="{{ route('home') }}" class="brand-link">
-        <span class="brand-text font-weight-light">{{ config('app.name', 'Laravel') }}</span>
+        <span class="brand-text font-weight-light">{{ 'Kelompok 3' }}</span>
     </a>
     <div class="sidebar">
         <nav class="mt-2">
@@ -75,6 +75,12 @@
                     <a href="{{ route('report.assets_summary') }}" class="nav-link">
                         <i class="nav-icon fas fa-file-alt"></i>
                         <p>Rekap Asset</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('report.vendor_purchases') }}" class="nav-link">
+                        <i class="nav-icon fas fa-file-alt"></i>
+                        <p>Pembelian Vendor</p>
                     </a>
                 </li>
             </ul>
