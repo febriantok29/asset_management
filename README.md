@@ -68,9 +68,10 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 ## Acknowledgements
 
 This project was built for the "Final Exam of the 5th semester, Informatics Engineering" course "Advanced Web Programming" taught by Mr. Muchamad Sandy, S.Kom., M.M.SI. It was completed by Group 3, with members:
-
--   FADEL MUHAMAD RIFAI (411221027)
--   FEBRIANTO KABISATULLAH (411221029)
--   APRIANTI NUBAN (411221174)
+| Name                  | Student ID    |
+|-----------------------|---------------|
+| Fadel Muhamad Rifai   | 411221027     |
+| Febrianto Kabisatullah| 411221029     |
+| Aprianti Nuban        | 411221174     |
 
 This project was developed at Universitas Dian Nusantara, for the academic year 2024/2025, during the first semester.
