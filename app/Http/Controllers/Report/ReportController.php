@@ -100,13 +100,13 @@ class ReportController extends Controller
     public function maintenanceRepairs()
     {
         $data = $this->getMaintenanceRepairsData();
-        return view('reports.maintenance_repairs', compact('data'));
+        return view('reports.maintenance_repairs.maintenance_repairs', compact('data'));
     }
 
     public function maintenanceRepairsPdf()
     {
         $data = $this->getMaintenanceRepairsData();
-        $pdf = PDF::loadView('reports.maintenance_repairs_pdf', compact('data'));
+        $pdf = PDF::loadView('reports.maintenance_repairs.maintenance_repairs_pdf', compact('data'));
         return $pdf->download('perbaikan_pemeliharaan_' . $this->getDateTimeNowFileNaming() . '.pdf');
     }
 

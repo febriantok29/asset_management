@@ -89,6 +89,12 @@
                         <p>Transfer Lokasi</p>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a href="{{ route('report.maintenance_repairs') }}" class="nav-link">
+                        <i class="nav-icon fas fa-file-alt"></i>
+                        <p>Perawatan & Perbaikan</p>
+                    </a>
+                </li>
             </ul>
         </nav>
     </div>
