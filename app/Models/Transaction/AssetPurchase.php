@@ -11,8 +11,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class AssetPurchase extends Model
 {
-    use SoftDeletes;
-    use HasFactory;
+    use SoftDeletes, HasFactory;
 
     protected $table = 't_asset_purchases';
 
@@ -50,7 +49,6 @@ class AssetPurchase extends Model
         }
 
         return '-';
-
     }
 
     public function getFormattedTotalCostAttribute()

@@ -5,13 +5,11 @@ namespace App\Models\Transaction;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-
 use App\Models\Master\Asset;
 
 class AssetRepair extends Model
 {
-    use HasFactory;
-    use SoftDeletes;
+    use HasFactory, SoftDeletes;
 
     protected $table = 't_asset_repairs';
 
@@ -41,6 +39,6 @@ class AssetRepair extends Model
 
     public function getFormattedCostAttribute()
     {
-        return 'Rp' . number_format($this->cost, 0, ',', '.');
+        return 'Rp ' . number_format($this->cost, 0, ',', '.');
     }
 }
