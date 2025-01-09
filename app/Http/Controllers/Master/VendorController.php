@@ -13,9 +13,15 @@ class VendorController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $vendors = Vendor::all();
+        $search = $request->input('search');
+
+        $vendors = Vendor::when($search, function ($query, $search) {
+            return $query->where('name', 'like', "%{$search}%")
+                         ->orWhere('code', 'like', "%{$search}%");
+        })->paginate(10);
+
         return view('master.vendors.index', compact('vendors'));
     }
 

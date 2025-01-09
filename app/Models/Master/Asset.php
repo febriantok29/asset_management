@@ -16,7 +16,7 @@ class Asset extends Model
 
     protected $table = 'm_assets';
 
-    protected $fillable = ['code', 'name', 'stock', 'category_id', 'vendor_id', 'description'];
+    protected $fillable = ['code', 'name', 'stock', 'category_id', 'location_id', 'description'];
 
     protected $dates = ['created_at', 'updated_at', 'deleted_at'];
 
@@ -31,9 +31,9 @@ class Asset extends Model
         return $this->belongsTo(Category::class, 'category_id');
     }
 
-    public function vendor()
+    public function location()
     {
-        return $this->belongsTo(Vendor::class, 'vendor_id');
+        return $this->belongsTo(AssetLocation::class, 'location_id');
     }
 
     public function assetPurchases()

@@ -10,11 +10,8 @@
 @endsection
 
 @section('content')
-    <div class="mb-3">
-        <form action="{{ route('categories.index') }}" method="GET" class="form-inline">
-            <input type="text" name="search" class="form-control mr-2" placeholder="Cari Kategori" value="{{ request('search') }}">
-            <button type="submit" class="btn btn-primary">Cari</button>
-        </form>
+<div class="mb-3">
+        @include('partials.search', ['route' => route('categories.index')])
     </div>
     @include('partials.table', [
         'createRoute' => route('categories.create'),
@@ -25,4 +22,7 @@
         'fields' => ['code', 'name', 'description'],
         'items' => $categories,
     ])
+    
+    @include('partials.pagination', ['paginator' => $categories])
+
 @endsection

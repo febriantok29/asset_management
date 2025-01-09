@@ -11,6 +11,10 @@
 @endsection
 
 @section('content')
+
+    <div class="mb-3">
+        @include('partials.search', ['route' => route('assets.index')])
+    </div>
     <div class="container mt-4">
         @include('partials.table', [
             'createRoute' => route('assets.create'),
@@ -22,4 +26,5 @@
             'items' => $assets,
         ])
     </div>
+    @include('partials.pagination', ['paginator' => $assets])
 @endsection
