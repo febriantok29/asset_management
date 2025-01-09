@@ -37,13 +37,13 @@
                 </div>
                 <div class="col-md-6">
                     <div class="form-group mb-3">
-                        <label for="vendor_id">Vendor</label>
-                        <select name="vendor_id" class="form-control" required>
-                            <option value="">Pilih Vendor</option>
-                            @foreach ($vendors as $vendor)
-                                <option value="{{ $vendor->id }}"
-                                    {{ $asset->vendor_id == $vendor->id ? 'selected' : '' }}>
-                                    {{ $vendor->name }}
+                        <label for="location_id">location</label>
+                        <select name="location_id" class="form-control" required>
+                            <option value="">Pilih location</option>
+                            @foreach ($locations as $location)
+                                <option value="{{ $location->id }}"
+                                    {{ $asset->location_id == $location->id ? 'selected' : '' }}>
+                                    {{ $location->name }}
                                 </option>
                             @endforeach
                         </select>

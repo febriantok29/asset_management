@@ -32,10 +32,10 @@
                 <th>ID</th>
                 <th>Nama</th>
                 <th>Kategori</th>
+                <th>Stok</th>
                 <th>Lokasi</th>
-                <th>Vendor</th>
-                <th>Tanggal Pembelian</th>
-                <th>Biaya</th>
+                <th>Tanggal Pembelian Terakhir</th>
+                <th>Total Biaya</th>
             </tr>
         </thead>
         <tbody>
@@ -44,8 +44,8 @@
                     <td>{{ $asset->id }}</td>
                     <td>{{ $asset->name }}</td>
                     <td>{{ $asset->category->name }}</td>
-                    <td>{{ $asset->latest_transfer_location_name }}</td>
-                    <td>{{ $asset->vendor->name }}</td>
+                    <td>{{ $asset->stock }}</td>
+                    <td>{{ $asset->location->name }}</td>
                     <td>{{ optional($asset->latestPurchase)->formatted_purchase_date }}</td>
                     <td>{{ optional($asset->latestPurchase)->formatted_total_cost }}</td>
                 </tr>

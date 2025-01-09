@@ -21,8 +21,8 @@
             'editRoute' => 'assets.edit',
             'showRoute' => 'assets.show',
             'deleteRoute' => 'assets.destroy',
-            'columns' => ['Kode', 'Nama Aset', 'Kategori', 'Vendor', 'Jumlah', 'Deskripsi'],
-            'fields' => ['code', 'name', 'category.name', 'vendor.name', 'stock', 'description'],
+            'columns' => ['Kode', 'Nama Aset', 'Kategori', 'lokasi', 'Jumlah', 'Deskripsi'],
+            'fields' => ['code', 'name', 'category.name', 'location.name', 'stock', 'description'],
             'items' => $assets,
         ])
     </div>
