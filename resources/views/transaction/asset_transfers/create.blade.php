@@ -41,18 +41,22 @@
                 </div>
                 <div class="mb-3">
                     <label for="asset_id" class="form-label">Aset <span class="text-danger">*</span></label>
-                    <select name="asset_id" id="asset_id" class="form-control @error('asset_id') is-invalid @enderror"
-                        required>
+                    <select name="asset_id" id="asset_id" class="form-control @error('asset_id') is-invalid @enderror" required>
                         <option value="">-- Pilih Aset --</option>
                         @foreach ($assets as $asset)
-                            <option value="{{ $asset->id }}" {{ old('asset_id') == $asset->id ? 'selected' : '' }}>
-                                {{ $asset->name }}</option>
+                            <option value="{{ $asset->id }}" 
+                                    data-location="{{ $asset->location_id }}" 
+                                    data-stock="{{ $asset->stock }}"
+                                    {{ old('asset_id') == $asset->id ? 'selected' : '' }}>
+                                {{ $asset->name }} - {{ $asset->location_name ?? 'Belum ada lokasi' }} (Stok: {{ $asset->stock }})
+                            </option>
                         @endforeach
                     </select>
                     @error('asset_id')
                         <span class="invalid-feedback">{{ $message }}</span>
                     @enderror
                 </div>
+                               
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label for="from_location_id" class="form-label">Dari Lokasi <span
@@ -95,11 +99,6 @@
                     @error('description')
                         <span class="invalid-feedback">{{ $message }}</span>
                     @enderror
-                    </div>
-                    </div>
-                </div>
-
-                </div>
                 </div>
 
                 <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Simpan</button>
@@ -107,16 +106,15 @@
         </div>
     </div>
 
+    @push('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const assetDropdown = document.getElementById('asset_id');
             const fromLocationDropdown = document.getElementById('from_location_id');
             const hiddenFromLocationInput = document.getElementById('hidden_from_location_id');
             const toLocationDropdown = document.getElementById('to_location_id');
+            const quantityInput = document.getElementById('quantity');
 
-            /**
-             * Validate if fromLocation and toLocation are the same.
-             */
             function validateLocations() {
                 const fromLocationId = fromLocationDropdown.value;
                 const toLocationId = toLocationDropdown.value;
@@ -124,6 +122,19 @@
                 if (fromLocationId && toLocationId && fromLocationId === toLocationId) {
                     alert('Lokasi asal dan tujuan tidak boleh sama.');
                     toLocationDropdown.value = '';
+                }
+            }
+
+            function validateQuantity() {
+                const selectedOption = assetDropdown.options[assetDropdown.selectedIndex];
+                const stock = selectedOption.getAttribute('data-stock');
+                const quantity = parseInt(quantityInput.value);
+
+                if (stock && quantity) {
+                    if (quantity > parseInt(stock)) {
+                        alert('Jumlah transfer tidak boleh melebihi stok yang tersedia.');
+                        quantityInput.value = '';
+                    }
                 }
             }
 
@@ -137,41 +148,20 @@
                 Array.from(toLocationDropdown.options).forEach(option => {
                     option.style.display = option.value === fromLocationId ? 'none' : 'block';
                 });
-            }
-
-            async function updateFromLocation(assetId) {
-                try {
-                    const response = await fetch(`/get-asset-location/${assetId}`);
-                    const data = await response.json();
-
-                    if (data.from_location_id) {
-                        fromLocationDropdown.value = data.from_location_id;
-                        hiddenFromLocationInput.value = data.from_location_id;
-                        fromLocationDropdown.disabled = true;
-                        toLocationDropdown.value = '';
-                        filterToLocationOptions(data.from_location_id);
-                    } else {
-                        fromLocationDropdown.value = '';
-                        hiddenFromLocationInput.value = '';
-                        fromLocationDropdown.disabled = false;
-                        resetToLocationOptions();
-                    }
-                } catch (error) {
-                    console.error('Error fetching asset location:', error);
-                    fromLocationDropdown.value = '';
-                    hiddenFromLocationInput.value = '';
-                    fromLocationDropdown.disabled = false;
-                    resetToLocationOptions();
+                if (toLocationDropdown.value === fromLocationId) {
+                    toLocationDropdown.value = '';
                 }
             }
 
-            fromLocationDropdown.addEventListener('change', validateLocations);
-            toLocationDropdown.addEventListener('change', validateLocations);
             assetDropdown.addEventListener('change', function() {
-                const assetId = this.value;
-
-                if (assetId) {
-                    updateFromLocation(assetId);
+                const selectedOption = this.options[this.selectedIndex];
+                const locationId = selectedOption.getAttribute('data-location');
+                
+                if (locationId) {
+                    fromLocationDropdown.value = locationId;
+                    hiddenFromLocationInput.value = locationId;
+                    fromLocationDropdown.disabled = true;
+                    filterToLocationOptions(locationId);
                 } else {
                     fromLocationDropdown.value = '';
                     hiddenFromLocationInput.value = '';
@@ -179,7 +169,20 @@
                     resetToLocationOptions();
                 }
             });
+
+            fromLocationDropdown.addEventListener('change', validateLocations);
+            toLocationDropdown.addEventListener('change', validateLocations);
+            quantityInput.addEventListener('change', validateQuantity);
+
+            // Initial setup
+            if (assetDropdown.value) {
+                const selectedOption = assetDropdown.options[assetDropdown.selectedIndex];
+                const locationId = selectedOption.getAttribute('data-location');
+                if (locationId) {
+                    filterToLocationOptions(locationId);
+                }
+            }
         });
     </script>
-
+    @endpush
 @endsection

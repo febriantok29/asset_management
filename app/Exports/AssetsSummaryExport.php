@@ -27,8 +27,7 @@ class AssetsSummaryExport implements FromCollection, WithHeadings, WithColumnWid
                 'ID' => $asset->id,
                 'Nama' => $asset->name,
                 'Kategori' => $asset->category->name,
-                'Lokasi' => $asset->latest_transfer_location_name,
-                'Vendor' => $asset->vendor->name,
+                'Lokasi' => $asset->location->name,
                 'Tanggal Pembelian' => optional($asset->latestPurchase)->formatted_purchase_date,
                 'Biaya' => optional($asset->latestPurchase)->formatted_total_cost,
             ];
@@ -42,7 +41,6 @@ class AssetsSummaryExport implements FromCollection, WithHeadings, WithColumnWid
             'Nama',
             'Kategori',
             'Lokasi',
-            'Vendor',
             'Tanggal Pembelian',
             'Biaya',
         ];
@@ -57,7 +55,6 @@ class AssetsSummaryExport implements FromCollection, WithHeadings, WithColumnWid
             'D' => 20,
             'E' => 30,
             'F' => 20,
-            'G' => 20,
         ];
     }
 

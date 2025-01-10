@@ -7,6 +7,8 @@ use App\Models\Master\Asset;
 use App\Models\Master\AssetLocation;
 use App\Models\Transaction\AssetTransfer;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+
 
 class AssetTransferController extends Controller
 {
@@ -25,12 +27,26 @@ class AssetTransferController extends Controller
      * Show the form for creating a new resource.
      */
     public function create()
-    {
-        $assets = Asset::all();
-        $locations = AssetLocation::all();
+{
+    // Get assets with their current locations and stock
+    $assets = Asset::select(
+            'm_assets.id',
+            'm_assets.name',
+            'm_assets.stock',
+            'm_assets.location_id',
+            'l.name as location_name'
+        )
+        ->leftJoin('m_locations as l', 'l.id', '=', 'm_assets.location_id')
+        ->where('m_assets.stock', '>', 0)
+        ->orderBy('m_assets.name')
+        ->get();
 
-        return view('transaction.asset_transfers.create', compact('assets', 'locations'));
-    }
+    // Get all active locations
+    $locations = AssetLocation::orderBy('name')->get();
+
+    return view('transaction.asset_transfers.create', compact('assets', 'locations'));
+}
+
 
     /**
      * Store a newly created resource in storage.
@@ -38,13 +54,61 @@ class AssetTransferController extends Controller
     public function store(Request $request)
     {
         $validatedData = $this->validateAssetTransfer($request);
-
         $validatedData['transfer_code'] = $this->generateTransferCode();
 
-        AssetTransfer::create($validatedData);
+        // Begin transaction to ensure data consistency
+        DB::beginTransaction();
+        try {
+            // Create transfer record
+            AssetTransfer::create($validatedData);
 
-        return redirect()->route('asset_transfers.index')->with('success', 'Transfer aset dengan kode ' . $validatedData['transfer_code'] . ' berhasil ditambahkan.');
+            // Get the source asset
+            $sourceAsset = Asset::findOrFail($validatedData['asset_id']);
+            
+            // Check if source has enough stock
+            if ($sourceAsset->stock < $validatedData['quantity']) {
+                throw new \Exception('Stock tidak mencukupi untuk transfer');
+            }
+            
+            // Reduce stock from source asset
+            $sourceAsset->stock -= $validatedData['quantity'];
+            $sourceAsset->save();
+
+            // Check if destination already has the same asset
+            $destinationAsset = Asset::where('name', $sourceAsset->name)
+                ->where('location_id', $validatedData['to_location_id'])
+                ->first();
+
+            if ($destinationAsset) {
+                // If exists, just add the quantity
+                $destinationAsset->stock += $validatedData['quantity'];
+                $destinationAsset->save();
+            } else {
+                // Create new asset at destination with new code
+                $newAssetCode = $sourceAsset->code . rand(100, 999);
+                $destinationAsset = Asset::create([
+                    'code' => $newAssetCode,
+                    'name' => $sourceAsset->name,
+                    'description' => $sourceAsset->description,
+                    'location_id' => $validatedData['to_location_id'],
+                    'stock' => $validatedData['quantity'],
+                    'category_id' => $sourceAsset->category_id,
+                    'unit_id' => $sourceAsset->unit_id,
+                ]);
+            }
+
+            DB::commit();
+
+            return redirect()->route('asset_transfers.index')
+                ->with('success', 'Transfer aset dengan kode ' . $validatedData['transfer_code'] . ' berhasil ditambahkan.');
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->back()
+                ->with('error', 'Terjadi kesalahan saat memproses transfer aset: ' . $e->getMessage());
+        }
     }
+
 
     /**
      * Display the specified resource.
