@@ -11,6 +11,9 @@
 @endsection
 
 @section('content')
+<div class="mb-3">
+        @include('partials.search', ['route' => route('vendors.index')])
+    </div>
     @include('partials.table', [
         'createRoute' => route('vendors.create'),
         'editRoute' => 'vendors.edit',
@@ -20,4 +23,5 @@
         'fields' => ['code', 'name', 'email', 'phone', 'address'],
         'items' => $vendors,
     ])
+    @include('partials.pagination', ['paginator' => $vendors])
 @endsection

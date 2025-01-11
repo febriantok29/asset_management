@@ -9,11 +9,16 @@ use Illuminate\Validation\Rule;
 
 class AssetLocationController extends Controller
 {
-    public function index()
-    {
-        $locations = AssetLocation::all();
-        return view('master.asset_locations.index', compact('locations'));
-    }
+    public function index(Request $request)
+{
+    $search = $request->input('search');
+    $locations = AssetLocation::when($search, function ($query, $search) {
+        return $query->where('name', 'like', "%{$search}%")
+                     ->orWhere('code', 'like', "%{$search}%");
+    })->paginate(10);
+
+    return view('master.asset_locations.index', compact('locations'));
+}
 
     public function create()
     {

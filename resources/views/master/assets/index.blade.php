@@ -11,15 +11,20 @@
 @endsection
 
 @section('content')
+
+    <div class="mb-3">
+        @include('partials.search', ['route' => route('assets.index')])
+    </div>
     <div class="container mt-4">
         @include('partials.table', [
             'createRoute' => route('assets.create'),
             'editRoute' => 'assets.edit',
             'showRoute' => 'assets.show',
             'deleteRoute' => 'assets.destroy',
-            'columns' => ['Kode', 'Nama Aset', 'Kategori', 'Vendor', 'Jumlah', 'Deskripsi'],
-            'fields' => ['code', 'name', 'category.name', 'vendor.name', 'stock', 'description'],
+            'columns' => ['Kode', 'Nama Aset', 'Kategori', 'lokasi', 'Jumlah', 'Deskripsi'],
+            'fields' => ['code', 'name', 'category.name', 'location.name', 'stock', 'description'],
             'items' => $assets,
         ])
     </div>
+    @include('partials.pagination', ['paginator' => $assets])
 @endsection

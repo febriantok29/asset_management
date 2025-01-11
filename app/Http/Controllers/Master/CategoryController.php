@@ -10,16 +10,17 @@ use Illuminate\Http\Request;
 class CategoryController extends Controller
 {
     public function index(Request $request)
-    {
-        $search = $request->input('search');
-        $categories = Category::when($search, function ($query, $search) {
-            return $query->where('name', 'like', "%{$search}%")
-                         ->orWhere('code', 'like', "%{$search}%")
-                         ->orWhere('description', 'like', "%{$search}%");
-        })->get();
+{
+    $search = $request->input('search');
+    $categories = Category::
+when($search, function ($query, $search) {
+        return $query->where('name', 'like', "%{$search}%")
+                     ->orWhere('code', 'like', "%{$search}%")
+                     ->orWhere('description', 'like', "%{$search}%");
+    })->paginate(10);
 
-        return view('master.categories.index', compact('categories'));
-    }
+    return view('master.categories.index', compact('categories'));
+}
 
     public function create()
     {

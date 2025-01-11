@@ -25,9 +25,8 @@
                             <option value="">-- Pilih Aset --</option>
                             @foreach ($assets as $asset)
                                 <option value="{{ $asset->id }}" {{ old('asset_id') == $asset->id ? 'selected' : '' }}>
-                                    {{ $asset->name }}</option>
-                            @endforeach
-                        </select>
+                                    {{ $asset->name }} - lokasi:{{ $asset->location->name }}</option>
+                            @endforeach                        </select>
                     </div>
                     <div class="col-md-6 mb-3">
                         <label for="vendor_id" class="form-label">Vendor</label>

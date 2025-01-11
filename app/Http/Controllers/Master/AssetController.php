@@ -5,24 +5,38 @@ namespace App\Http\Controllers\Master;
 use App\Http\Controllers\Controller;
 use App\Models\Master\Asset;
 use App\Models\Master\Category;
-use App\Models\Master\Vendor;
+use App\Models\Master\AssetLocation;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
 class AssetController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $assets = Asset::with(['category', 'vendor'])->get();
+        $search = $request->input('search');
+
+        $assets = Asset::with(['category', 'location'])
+            ->when($search, function ($query, $search) {
+                return $query->where('code', 'like', "%{$search}%")
+
+                             ->orWhere('name', 'like', "%{$search}%")
+                             ->orWhereHas('category', function ($query) use ($search) {
+                                 $query->where('name', 'like', "%{$search}%");
+                             })
+                             ->orWhereHas('location', function ($query) use ($search) {
+                                 $query->where('name', 'like', "%{$search}%");
+                             });
+            })
+            ->paginate(10);
         return view('master.assets.index', compact('assets'));
     }
 
     public function create()
     {
         $categories = Category::all();
-        $vendors = Vendor::all();
+        $locations = AssetLocation::all();
 
-        return view('master.assets.create', compact('categories', 'vendors'));
+        return view('master.assets.create', compact('categories', 'locations'));
     }
 
     public function store(Request $request)
@@ -45,9 +59,9 @@ class AssetController extends Controller
     public function edit(Asset $asset)
     {
         $categories = Category::all();
-        $vendors = Vendor::all();
+        $locations = AssetLocation::all();
 
-        return view('master.assets.edit', compact('asset', 'categories', 'vendors'));
+        return view('master.assets.edit', compact('asset', 'categories', 'locations'));
     }
 
     public function update(Request $request, Asset $asset)
@@ -84,7 +98,7 @@ class AssetController extends Controller
             'name' => 'required|string|min:2|max:255',
             'stock' => 'required|integer|min:0',
             'category_id' => 'required|exists:m_categories,id',
-            'vendor_id' => 'required|exists:m_vendors,id',
+            'location_id' => 'required|exists:m_locations,id',
             'description' => 'nullable|string|max:1000',
         ];
 

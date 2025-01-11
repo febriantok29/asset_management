@@ -33,15 +33,16 @@
                 </div>
                 <div class="col-md-6">
                     <div class="form-group mb-3">
-                        <label for="vendor_id">Vendor</label>
-                        <select name="vendor_id" class="form-control" required>
-                            <option value="">Pilih Vendor</option>
-                            @foreach ($vendors as $vendor)
-                                <option value="{{ $vendor->id }}">{{ $vendor->name }}</option>
+                        <label for="location_id">Location</label>
+                        <select name="location_id" class="form-control" required>
+                            <option value="">Pilih Location</option>
+                            @foreach ($locations as $location)
+                                <option value="{{ $location->id }}">{{ $location->name }}</option>
                             @endforeach
                         </select>
                     </div>
                 </div>
+                
             </div>
             <div class="form-group mb-3">
                 <label for="stock">Jumlah</label>

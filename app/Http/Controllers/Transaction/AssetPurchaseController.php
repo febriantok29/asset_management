@@ -29,19 +29,27 @@ class AssetPurchaseController extends Controller
     }
 
     public function store(Request $request)
-    {
-        // Clean the total_cost input before validation
-        $request->merge([
-            'total_cost' => str_replace(['.', ','], '', $request->input('total_cost'))
-        ]);
+{
+    // Clean the total_cost input before validation
+    $request->merge([
+        'total_cost' => str_replace(['.', ','], '', $request->input('total_cost'))
+    ]);
 
-        $validatedData = $this->validateAssetPurchase($request);
-        $validatedData['purchase_code'] = $this->generatePurchaseCode();
+    $validatedData = $this->validateAssetPurchase($request);
+    $validatedData['purchase_code'] = $this->generatePurchaseCode();
 
-        AssetPurchase::create($validatedData);
+    // Create the asset purchase
+    AssetPurchase::create($validatedData);
 
-        return redirect()->route('asset_purchases.index')->with('success', 'Pembelian aset dengan kode ' . $validatedData['purchase_code'] . ' berhasil ditambahkan.');
-    }
+    // Update the asset stock
+    $asset = Asset::findOrFail($validatedData['asset_id']);
+    $asset->stock += $validatedData['quantity'];
+    $asset->save();
+
+    return redirect()->route('asset_purchases.index')
+        ->with('success', 'Pembelian aset dengan kode ' . $validatedData['purchase_code'] . ' berhasil ditambahkan.');
+}
+
 
     public function show(AssetPurchase $assetPurchase)
     {
